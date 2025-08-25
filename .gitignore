@@ -1,0 +1,4 @@
+disease_predictor/pneumonia_detection.h5
+fraud_detection/random_forest_model.pkl
+fraud_detection/testing.csv
+fraud_detection/xgboost_model.pkl
