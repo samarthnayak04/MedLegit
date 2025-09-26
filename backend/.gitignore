@@ -1,0 +1,4 @@
+.venv
+.env
+# Python cache inside the migrations folder
+migrations/__pycache__/
