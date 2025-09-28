@@ -3,3 +3,100 @@ disease_predictor/pneumonia_detection.h5
 fraud_detection/random_forest_model.pkl
 fraud_detection/testing.csv
 fraud_detection/xgboost_model.pkl
+
+# ========================
+# Python
+# ========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ========================
+# Virtual environment
+# ========================
+venv/
+.env/
+.venv/
+ENV/
+env.bak/
+
+# ========================
+# Jupyter / IPython
+# ========================
+
+
+# ========================
+# OS-specific
+# ========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ========================
+# Logs / Cache
+# ========================
+*.log
+*.tmp
+*.swp
+*.swo
+*.bak
+*.sqlite3
+*.db
+*.sql
+*.tar.gz
+*.zip
+*.gz
+
+# HuggingFace / Transformers cache
+~/.cache/
+.huggingface/
+transformers_cache/
+datasets/
+cache/
+__cache__/
+
+# ========================
+# Environment / Secrets
+# ========================
+.env
+*.pem
+*.key
+*.crt
+*.token
+*.secrets
+
+# ========================
+# Uploaded / Generated files
+# ========================
+uploads/
+media/
+reports/
+*.pdf
+*.docx
+*.txt
+
+# ========================
+# IDE / Editor files
+# ========================
+.vscode/
+.idea/
+*.iml
+*.sublime-project
+*.sublime-workspace
+
+# ========================
+# Model files
+# ========================
+*.pt
+*.pth
+*.bin
+*.h5
+*.ckpt
+*.onnx

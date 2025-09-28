@@ -1,0 +1,20 @@
+[
+    {
+        "issue": "Lack of informed consent",
+        "law": "Indian Medical Council Regulations",
+        "section": "Section 5(1)",
+        "quote": "Every physician shall obtain informed consent from the patient before any medical procedure…"
+    },
+    {
+        "issue": "Post-operative care negligence",
+        "law": "Indian Penal Code",
+        "section": "Section 304A",
+        "quote": "Whoever causes death by negligence shall be punished with imprisonment…"
+    },
+    {
+        "issue": "Breach of contract",
+        "law": "Indian Contract Act",
+        "section": "Section 73",
+        "quote": "When a contract is broken, the party who suffers by such breach is entitled to receive compensation…"
+    }
+]
