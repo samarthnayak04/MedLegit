@@ -1,6 +1,5 @@
-from pydantic import BaseModel, Field
-from typing import List
-
+from pydantic import BaseModel, Field, ConfigDict
+from datetime import datetime
 class FraudPredictionIn(BaseModel):
     ClaimDuration_mean: float
     ClaimDuration_max: float
@@ -22,4 +21,12 @@ class FraudPredictionIn(BaseModel):
 class FraudPredictionOut(BaseModel):
     Provider: str
     PotentialFraud: str = Field(..., description="Predicted fraud label ('Yes' or 'No').")
-    Fraud_Probability: float = Field(..., description="Probability of fraud, 0-1.")
+    Fraud_Probability: float = Field(..., description="Probability of fraud as percentage, 0-100%.")
+class FraudCaseOut(BaseModel):
+    id: int
+    provider: str = Field(..., alias="Provider")
+    potential_fraud: str = Field(..., alias="PotentialFraud")
+    fraud_probability: float = Field(..., alias="Fraud_Probability")
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
