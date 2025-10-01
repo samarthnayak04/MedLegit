@@ -25,9 +25,9 @@ class FraudModel:
         return (preds > 0.5).astype(int)  # thresholding for classification
 
     def predict_proba(self, data: pd.DataFrame) -> np.ndarray:
-        dmatrix = xgb.DMatrix(data)
-        preds = self.model.predict(dmatrix)
-        return preds  # probability scores
+        dmatrix = xgb.DMatrix(data[FEATURE_NAMES])
+        preds = self.model.predict(dmatrix)  # probabilities between 0–1
+        return preds # probability scores
 
 # Update to JSON path
 fraud_model = FraudModel("aiModels/fraud_detection/xgboost_model.json")
