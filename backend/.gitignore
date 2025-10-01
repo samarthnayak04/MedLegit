@@ -1,4 +1,72 @@
-.venv
+# ==========================
+# Python
+# ==========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# ==========================
+# Virtual Environment
+# ==========================
+.venv/
+venv/
+env/
+
+# ==========================
+# Environment Variables
+# ==========================
 .env
-# Python cache inside the migrations folder
-migrations/__pycache__/
+
+# ==========================
+# Logs and temporary files
+# ==========================
+*.log
+*.bak
+*.sqlite3
+*.db
+*.DS_Store
+*.swp
+*.swo
+
+# ==========================
+# IDE / Editor
+# ==========================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ==========================
+# Python packaging / distribution
+# ==========================
+*.egg-info/
+dist/
+build/
+
+# ==========================
+# Machine Learning / Models
+# ==========================
+# Ignore ML models to keep repo lightweight and secure
+aiModels/**/*.keras
+aiModels/**/*.pkl
+aiModels/**/*.joblib
+aiModels/**/*.json
+
+# ==========================
+# Alembic / Migrations
+# ==========================
+# Track migrations in Git for versioned DB schema
+migrations/
+!migrations/env.py
+!migrations/script.py.mako
+# Ignore __pycache__ inside migrations
+migrations/**/__pycache__/
+
+# ==========================
+# Testing / Coverage
+# ==========================
+htmlcov/
+.coverage
+pytest_cache/
