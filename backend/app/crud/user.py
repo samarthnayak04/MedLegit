@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.user import User
+from app import models
 from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -17,3 +18,6 @@ def create_user(db: Session, email: str, password: str):
 
 def verify_password(plain_password: str, hashed_password: str):
     return pwd_context.verify(plain_password, hashed_password)
+
+def get_all_users(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.user.User).offset(skip).limit(limit).all()
