@@ -4,10 +4,19 @@ import pathlib
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 from alembic import context
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+# --- Fix the syntax error by separating the imports ---
+import app.models # Package import
+from app.core.db import Base # Class import
+# ------------------------------------------------------
+
+# --- Import ALL remaining models (must be before target_metadata) ---
+from app.models import user 
+from app.models.fraud import FraudCase 
+from app.models.health import PneumoniaCase 
 
 # --- Path setup ---
-# BASE_DIR points to backend/ (project root)
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 BASE_DIR = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASE_DIR))
 
@@ -16,13 +25,9 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# --- Import your models ---
-from app.core.db import Base        # SQLAlchemy Base
-from app.models import user    # import all models here
-from app.models.fraud import FraudCase   
+# --- Metadata Assignment ---
+# This must be at the end of all model imports
 target_metadata = Base.metadata
-
-# --- Migration functions ---
 def run_migrations_offline() -> None:
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
