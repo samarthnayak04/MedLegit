@@ -13,4 +13,4 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     fraud_cases = relationship("FraudCase", back_populates="user")
-
+    pneumonia_cases = relationship("PneumoniaCase", back_populates="user")

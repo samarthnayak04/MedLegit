@@ -67,12 +67,12 @@ async def refresh_token(request: Request, response: Response, db: Session = Depe
     refresh_token = request.cookies.get("refresh_token")
 
     # 1a. For Postman testing (optional)
-    if not refresh_token:
-        try:
-            body = await request.json()
-            refresh_token = body.get("refresh_token")
-        except Exception:
-            pass
+    # if not refresh_token:
+    #     try:
+    #         body = await request.json()
+    #         refresh_token = body.get("refresh_token")
+    #     except Exception:
+    #         pass
 
     if not refresh_token:
         raise HTTPException(status_code=401, detail="Refresh token missing")
