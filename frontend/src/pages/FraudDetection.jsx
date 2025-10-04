@@ -1,26 +1,76 @@
-import React, { useState } from "react";
-import { Upload } from "lucide-react";
-
+import React, { useState, useRef } from "react";
+import { Upload, RotateCcw } from "lucide-react";
+import api from "../api/axios";
+import toast from "react-hot-toast";
 export default function FraudDetection() {
   const [results, setResults] = useState([]);
   const [fileName, setFileName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
+  const fileInputRef = useRef(null);
 
+  // Core upload logic
+  const uploadFile = async (file) => {
+    if (!file) return;
+
+    setFileName(file.name);
+    setLoading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await api.post("/fraud/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      setResults(res.data);
+    } catch (err) {
+      if (err.response?.status === 401) {
+        toast.error("Session expired. Please log in again.");
+      } else if (err.response?.status === 400) {
+        toast.error("Invalid file format. Please upload a csv file.");
+      } else if (err.response?.status === 500) {
+        toast.error("Server error. Please try again later.");
+      }
+    } finally {
+      setLoading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  // Handle file input
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setFileName(file.name);
+    uploadFile(file);
+  };
 
-      // ✅ Mock backend-like response
-      setLoading(true);
-      setTimeout(() => {
-        const mockOutput = [
-          { Provider: "PRV51002", PotentialFraud: "No", Fraud_Probability: 0.01 },
-          { Provider: "PRV99999", PotentialFraud: "Yes", Fraud_Probability: 92.39 },
-        ];
-        setResults(mockOutput);
-        setLoading(false);
-      }, 1200);
+  // Handle drag & drop
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setDragActive(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setDragActive(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragActive(false);
+
+    const file = e.dataTransfer.files?.[0];
+    uploadFile(file);
+  };
+
+  const handleReset = () => {
+    setFileName("");
+    setResults([]);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   };
 
@@ -30,18 +80,28 @@ export default function FraudDetection() {
         Fraud Detection
       </h2>
 
-      {/* Upload Box */}
-      <div className="p-6 shadow-md rounded-2xl mb-6 border border-gray-700 bg-gray-900">
+      {/* Upload / Drag & Drop Box */}
+      <div
+        className={`p-6 shadow-md rounded-2xl mb-6 border-2 border-dashed ${
+          dragActive
+            ? "border-indigo-600 bg-gray-800"
+            : "border-gray-700 bg-gray-900"
+        } transition`}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
         <div className="flex flex-col items-center justify-center space-y-4">
           <label
             htmlFor="fileUpload"
-            className="flex flex-col items-center justify-center border-2 border-dashed border-indigo-400 rounded-xl p-6 cursor-pointer hover:bg-gray-800 transition"
+            className="flex flex-col items-center justify-center cursor-pointer"
           >
             <Upload className="w-10 h-10 text-indigo-500 mb-2" />
             <span className="text-gray-200 font-medium">
-              {fileName || "Upload CSV file"}
+              {fileName || "Drag & drop CSV file here or click to upload"}
             </span>
             <input
+              ref={fileInputRef}
               id="fileUpload"
               type="file"
               accept=".csv"
@@ -49,9 +109,14 @@ export default function FraudDetection() {
               onChange={handleFileUpload}
             />
           </label>
+
           {fileName && (
-            <button className="w-full bg-indigo-600 text-white py-2 px-4 rounded-xl hover:bg-indigo-700 transition">
-              Process File
+            <button
+              onClick={handleReset}
+              className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-md transition"
+            >
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Reset File
             </button>
           )}
         </div>
@@ -74,8 +139,12 @@ export default function FraudDetection() {
               <thead>
                 <tr className="bg-gray-800 text-left text-gray-200">
                   <th className="p-3 border-b border-gray-700">Provider</th>
-                  <th className="p-3 border-b border-gray-700">Potential Fraud</th>
-                  <th className="p-3 border-b border-gray-700">Fraud Probability (%)</th>
+                  <th className="p-3 border-b border-gray-700">
+                    Potential Fraud
+                  </th>
+                  <th className="p-3 border-b border-gray-700">
+                    Fraud Probability (%)
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -93,7 +162,9 @@ export default function FraudDetection() {
                     >
                       {row.PotentialFraud}
                     </td>
-                    <td className="p-3 border-b border-gray-700">{row.Fraud_Probability.toFixed(2)}%</td>
+                    <td className="p-3 border-b border-gray-700">
+                      {row.Fraud_Probability.toFixed(2)}%
+                    </td>
                   </tr>
                 ))}
               </tbody>

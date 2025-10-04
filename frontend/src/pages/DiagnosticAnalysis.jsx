@@ -1,28 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Upload } from "lucide-react";
-
+import api from "../api/axios"; // your axios instance with interceptors
+import toast from "react-hot-toast";
 export default function DiagnosticAnalysis() {
   const [image, setImage] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
+  const inputRef = useRef(null);
+
+  const handleFile = async (file) => {
+    if (!file) return;
+
+    setImage(URL.createObjectURL(file));
+    setResult(null);
+    setLoading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await api.post("/health/pneumonia", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setResult(res.data);
+    } catch (err) {
+      if (err.response?.status === 401) {
+        toast.error("Session expired. Please log in again.");
+      } else if (err.response?.status === 400) {
+        toast.error("Invalid file format. Please upload a valid image.");
+      } else if (err.response?.status === 500) {
+        toast.error("Server error. Please try again later.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleImageUpload = (e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImage(URL.createObjectURL(file));
+    handleFile(file);
+  };
 
-      // Mock API response
-      setLoading(true);
-      setTimeout(() => {
-        const mockOutput = {
-          id: "39c4a6bf-05c0-456a-8e92-aa314aa75062",
-          prediction: "Pneumonia",
-          confidence: 0.5222964286804199,
-          created_at: new Date().toISOString(),
-        };
-        setResult(mockOutput);
-        setLoading(false);
-      }, 1200);
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFile(e.dataTransfer.files[0]);
     }
   };
 
@@ -32,22 +67,38 @@ export default function DiagnosticAnalysis() {
         Diagnostic Analysis
       </h2>
 
-      {/* Image Upload */}
-      <div className="p-6 shadow-md rounded-2xl mb-6 border border-gray-700 bg-gray-900">
+      {/* Upload / Drag & Drop */}
+      <div
+        className={`p-6 shadow-md rounded-2xl mb-6 border-2 border-dashed transition
+          ${
+            dragActive
+              ? "border-indigo-500 bg-gray-800"
+              : "border-gray-700 bg-gray-900"
+          }`}
+        onDragEnter={handleDrag}
+        onDragOver={handleDrag}
+        onDragLeave={handleDrag}
+        onDrop={handleDrop}
+      >
         <div className="flex flex-col items-center space-y-4">
           <label
             htmlFor="imageUpload"
-            className="flex flex-col items-center justify-center border-2 border-dashed border-indigo-400 rounded-xl p-6 cursor-pointer hover:bg-gray-800 transition"
+            className="flex flex-col items-center justify-center cursor-pointer"
           >
             <Upload className="w-10 h-10 text-indigo-500 mb-2" />
-            <span className="text-gray-200 font-medium">
-              {image ? "Image Selected" : "Upload Lung Image"}
+            <span className="text-gray-200 font-medium text-center">
+              {image
+                ? "Image Selected"
+                : dragActive
+                ? "Drop image here"
+                : "Click or Drag & Drop Lung Image"}
             </span>
             <input
               id="imageUpload"
               type="file"
               accept="image/*"
               className="hidden"
+              ref={inputRef}
               onChange={handleImageUpload}
             />
           </label>
@@ -61,7 +112,7 @@ export default function DiagnosticAnalysis() {
         </div>
       )}
 
-      {/* Display Image & Results */}
+      {/* Results */}
       {!loading && image && result && (
         <div className="p-6 shadow-md rounded-2xl border border-gray-700 bg-gray-900 space-y-4">
           <h3 className="text-xl font-semibold text-indigo-300">
@@ -91,11 +142,9 @@ export default function DiagnosticAnalysis() {
                 </tr>
                 <tr className="border-b border-gray-700">
                   <td className="p-3 font-medium text-gray-300">Confidence</td>
-                  <td className="p-3">{(result.confidence * 100).toFixed(2)}%</td>
-                </tr>
-                <tr>
-                  <td className="p-3 font-medium text-gray-300">Created At</td>
-                  <td className="p-3">{new Date(result.created_at).toLocaleString()}</td>
+                  <td className="p-3">
+                    {(result.confidence * 100).toFixed(2)}%
+                  </td>
                 </tr>
               </tbody>
             </table>
