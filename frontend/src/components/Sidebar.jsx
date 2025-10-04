@@ -5,7 +5,6 @@ import {
   FiShield,
   FiActivity,
   FiFileText,
-  FiBarChart2,
   FiSettings,
   FiMenu,
   FiLogOut,
@@ -31,10 +30,21 @@ export default function Sidebar() {
 
   const menuItems = [
     { id: "/dashboard", icon: <FiHome size={18} />, label: "Dashboard" },
-    { id: "/dashboard/fraud", icon: <FiShield size={18} />, label: "Fraud Detection" },
-    { id: "/dashboard/diagnostic", icon: <FiActivity size={18} />, label: "Diagnostic Analysis" },
-    { id: "/dashboard/legal", icon: <FiFileText size={18} />, label: "Legal Case Analysis" },
-    { id: "/dashboard/reports", icon: <FiBarChart2 size={18} />, label: "Reports" },
+    {
+      id: "/dashboard/fraud",
+      icon: <FiShield size={18} />,
+      label: "Fraud Detection",
+    },
+    {
+      id: "/dashboard/diagnostic",
+      icon: <FiActivity size={18} />,
+      label: "Diagnostic Analysis",
+    },
+    {
+      id: "/dashboard/legal",
+      icon: <FiFileText size={18} />,
+      label: "Legal Case Analysis",
+    },
   ];
 
   const sidebarVariants = {
@@ -122,7 +132,9 @@ export default function Sidebar() {
             <button
               className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg 
                 text-red-500 hover:text-white hover:bg-red-600/20
-                transition-all duration-200 ${!isExpanded ? "justify-center" : ""}`}
+                transition-all duration-200 ${
+                  !isExpanded ? "justify-center" : ""
+                }`}
             >
               <FiLogOut size={18} />
               {isExpanded && <span>Logout</span>}
