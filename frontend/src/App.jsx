@@ -5,7 +5,6 @@ import FraudDetection from "./pages/FraudDetection";
 import DiagnosticAnalysis from "./pages/DiagnosticAnalysis";
 import LegalAnalysis from "./pages/LegalAnalysis";
 
-import Settings from "./pages/Settings";
 import Home from "./pages/LandingPage";
 import Signup from "./pages/Signup";
 import toast, { Toaster } from "react-hot-toast";
@@ -36,8 +35,6 @@ function App() {
             <Route path="fraud" element={<FraudDetection />} />
             <Route path="diagnostic" element={<DiagnosticAnalysis />} />
             <Route path="legal" element={<LegalAnalysis />} />
-
-            <Route path="settings" element={<Settings />} />
           </Route>
           {/* Default fallback */}
           <Route path="*" element={<Navigate to="/signin" />} />

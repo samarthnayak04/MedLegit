@@ -1,22 +1,32 @@
-'use client';
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin } from 'lucide-react';
+"use client";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Mail, Phone, MapPin } from "lucide-react";
+import Navbar from "../components/Navbar";
 
 export default function Contact() {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Message sent!\n\nName: ${formData.name}\nEmail: ${formData.email}\nMessage: ${formData.message}`);
-    setFormData({ name: '', email: '', message: '' });
+    alert(
+      `Message sent!\n\nName: ${formData.name}\nEmail: ${formData.email}\nMessage: ${formData.message}`
+    );
+    setFormData({ name: "", email: "", message: "" });
   };
 
   return (
-    <section className="relative bg-gray-900 text-white py-20 overflow-hidden">
+    <section className="relative bg-gray-900 text-white min-h-screen flex items-center justify-center overflow-hidden">
+      <div className="fixed top-0 left-0 w-full z-50">
+        <Navbar />
+      </div>
       {/* Decorative blobs */}
       <div className="absolute -top-24 -left-24 w-60 h-60 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
       <div className="absolute -bottom-32 -right-32 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-blob animation-delay-2000"></div>
@@ -33,29 +43,39 @@ export default function Contact() {
             Contact Us
           </h2>
           <p className="text-gray-300 text-lg md:text-xl leading-relaxed">
-            Have questions or want to get in touch? Reach out and we'll respond as quickly as possible.
+            Have questions or want to get in touch? Reach out and we'll respond
+            as quickly as possible.
           </p>
 
           <div className="space-y-4">
-            <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-4 bg-gray-800 p-5 rounded-2xl shadow-lg">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center gap-4 bg-gray-800 p-5 rounded-2xl shadow-lg"
+            >
               <Mail className="w-6 h-6 text-indigo-400" />
               <div>
                 <p className="text-gray-400 text-sm">Email</p>
                 <p className="text-white font-medium">contact@medlegit.com</p>
               </div>
             </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-4 bg-gray-800 p-5 rounded-2xl shadow-lg">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center gap-4 bg-gray-800 p-5 rounded-2xl shadow-lg"
+            >
               <Phone className="w-6 h-6 text-indigo-400" />
               <div>
                 <p className="text-gray-400 text-sm">Phone</p>
                 <p className="text-white font-medium">+91 98765 43210</p>
               </div>
             </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-4 bg-gray-800 p-5 rounded-2xl shadow-lg">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center gap-4 bg-gray-800 p-5 rounded-2xl shadow-lg"
+            >
               <MapPin className="w-6 h-6 text-indigo-400" />
               <div>
-                <p className="text-gray-400 text-sm">Address</p>
-                <p className="text-white font-medium">123 MedLegit St, New Delhi, India</p>
+                <p className="text-gray-400 text-sm">Location</p>
+                <p className="text-white font-medium">Bengaluru, India</p>
               </div>
             </motion.div>
           </div>

@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiMenu, FiX } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import ThemeToggle from "./ThemeToggle"; // adjust path if needed
 
 export default function Navbar() {
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -30,19 +29,13 @@ export default function Navbar() {
   return (
     <header className="w-full bg-gradient-to-br from-gray-900/70 to-gray-800/70 backdrop-blur-lg shadow-lg px-4 sm:px-6 py-3 flex justify-between items-center relative z-50">
       {/* Logo */}
-      <div className="flex items-center gap-3">
-        <Link to="/">
-          {" "}
-          {/* <-- Wrap logo in Link */}
-          <span className="text-4xl font-bold text-white tracking-wide cursor-pointer">
-            MedLegit
-          </span>
-        </Link>
-        <div className="bg-white p-2 rounded-full shadow-md">
-          {/* Optional logo image */}
-          {/* <img src="/images/Logo1.png" alt="MedLegit Logo" className="w-10 h-10 object-contain" /> */}
-        </div>
-      </div>
+      <Link to="/" className="flex items-center gap-2">
+        <span className="text-3xl md:text-4xl font-extrabold tracking-wide cursor-pointer bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text drop-shadow-lg">
+          MedLegit
+        </span>
+        {/* Optional Icon */}
+        {/* <span className="text-cyan-400 text-2xl">⚖️</span> */}
+      </Link>
 
       {/* Desktop Navigation */}
       <nav className="hidden md:flex items-center gap-6">
@@ -50,23 +43,27 @@ export default function Navbar() {
           <Link
             key={idx}
             to={link.to}
-            className="px-3 py-1 rounded-lg text-gray-300 hover:bg-gray-800 hover:text-white transition-all"
+            className="relative text-gray-300 hover:text-cyan-400 transition duration-300 
+              after:content-[''] after:absolute after:w-0 after:h-[2px] after:left-0 after:-bottom-1 
+              after:bg-cyan-400 after:transition-all after:duration-300 hover:after:w-full"
           >
             {link.name}
           </Link>
         ))}
-        <ThemeToggle />
+
+        {/* CTA Button */}
       </nav>
 
       {/* Mobile Hamburger */}
       <button
+        aria-label="Toggle navigation menu"
         onClick={() => setMobileMenu(!mobileMenu)}
         className="md:hidden text-gray-300 hover:text-white focus:outline-none"
       >
         {mobileMenu ? (
-          <FiX className="w-6 h-6" />
+          <FiX className="w-7 h-7" />
         ) : (
-          <FiMenu className="w-6 h-6" />
+          <FiMenu className="w-7 h-7" />
         )}
       </button>
 
@@ -77,16 +74,17 @@ export default function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
+            transition={{ type: "spring", stiffness: 120, damping: 20 }}
             ref={menuRef}
-            className="absolute top-full left-0 w-full bg-gray-900/95 backdrop-blur-md shadow-lg z-40 flex flex-col md:hidden"
+            className="absolute top-full left-0 w-full bg-gray-900/95 border-t border-gray-700 
+              backdrop-blur-md shadow-lg z-40 flex flex-col md:hidden"
           >
             {navLinks.map((link, idx) => (
               <Link
                 key={idx}
                 to={link.to}
                 onClick={() => setMobileMenu(false)}
-                className="px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-all"
+                className="px-6 py-4 text-gray-300 hover:text-cyan-400 hover:bg-gray-800 transition-all duration-300"
               >
                 {link.name}
               </Link>
