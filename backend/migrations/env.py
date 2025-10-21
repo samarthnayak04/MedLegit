@@ -14,6 +14,7 @@ from app.core.db import Base # Class import
 from app.models import user 
 from app.models.fraud import FraudCase 
 from app.models.health import PneumoniaCase 
+from app.models.legal import LegalCase
 
 # --- Path setup ---
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
