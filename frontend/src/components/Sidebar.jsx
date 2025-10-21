@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import api from "../api/axios";
 import { Link, useLocation } from "react-router-dom";
 import {
   FiHome,
@@ -78,9 +79,9 @@ export default function Sidebar() {
           animate={isExpanded ? "expanded" : "collapsed"}
           variants={sidebarVariants}
           transition={{ duration: 0.3 }}
-          className={`fixed left-0 top-20 h-[calc(95vh-4rem)] mt-4 ml-4 
+          className={`fixed left-0 top-10 h-[calc(95vh)] mt-4  
             bg-gradient-to-br from-gray-900/70 to-gray-800/70 
-            backdrop-blur-lg border border-gray-700 shadow-xl rounded-2xl p-6
+            backdrop-blur-lg border border-gray-800 shadow-xl rounded-2xl p-6
             flex flex-col z-30 overflow-hidden`}
         >
           {/* User Avatar + Toggle */}
@@ -131,10 +132,22 @@ export default function Sidebar() {
           <div className="mt-6">
             <button
               className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg 
-                text-red-500 hover:text-white hover:bg-red-600/20
-                transition-all duration-200 ${
-                  !isExpanded ? "justify-center" : ""
-                }`}
+      text-red-500 hover:text-white hover:bg-red-600/20
+      transition-all duration-200 ${!isExpanded ? "justify-center" : ""}`}
+              onClick={async () => {
+                try {
+                  const res = await api.post("/auth/logout"); // path must match backend
+                  if (res.status === 200) {
+                    localStorage.removeItem("access_token"); // remove access token
+                    window.location.href = "/"; // redirect landing
+                    console.log("Logged out successfully");
+                  } else {
+                    console.error("Logout failed", res);
+                  }
+                } catch (err) {
+                  console.error("Error logging out:", err);
+                }
+              }}
             >
               <FiLogOut size={18} />
               {isExpanded && <span>Logout</span>}

@@ -37,12 +37,16 @@ export default function About() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.4 }}
       >
-        <button className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full shadow-lg font-medium hover:shadow-xl transition">
+        <button
+          onClick={() => navigate("/services")}
+          className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full cursor-pointer shadow-lg font-medium hover:shadow-xl hover:scale-105 transition transform focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-900 cursor-default"
+        >
           Learn More
         </button>
+
         <button
           onClick={() => navigate("/contact")}
-          className="px-6 py-3 border border-indigo-500 rounded-full font-medium text-indigo-400 hover:text-white hover:bg-indigo-600 transition"
+          className="px-6 py-3 border border-indigo-500 rounded-full cursor-pointer font-medium text-indigo-400 hover:text-white hover:bg-indigo-600 hover:scale-105 transition transform focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-900 cursor-default"
         >
           Contact Us
         </button>

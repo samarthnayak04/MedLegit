@@ -12,7 +12,7 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/api/auth/signup", { email, password });
+      await api.post("/auth/signup", { email, password });
       alert("Signup successful! Please login.");
       navigate("/signin");
     } catch (err) {

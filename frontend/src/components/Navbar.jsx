@@ -27,7 +27,10 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="w-full bg-gradient-to-br from-gray-900/70 to-gray-800/70 backdrop-blur-lg shadow-lg px-4 sm:px-6 py-3 flex justify-between items-center relative z-50">
+    <header
+      className="w-full bg-slate-900/70 backdrop-blur-xl shadow-lg shadow-black/40 
+  border-b border-blue-500/20 px-4 sm:px-6 py-3 flex justify-between items-center relative z-50"
+    >
       {/* Logo */}
       <Link to="/" className="flex items-center gap-2">
         <span className="text-3xl md:text-4xl font-extrabold tracking-wide cursor-pointer bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text drop-shadow-lg">
@@ -43,7 +46,7 @@ export default function Navbar() {
           <Link
             key={idx}
             to={link.to}
-            className="relative text-gray-300 hover:text-cyan-400 transition duration-300 
+            className="relative text-gray-200 hover:text-cyan-300 transition duration-300 
               after:content-[''] after:absolute after:w-0 after:h-[2px] after:left-0 after:-bottom-1 
               after:bg-cyan-400 after:transition-all after:duration-300 hover:after:w-full"
           >
@@ -76,7 +79,7 @@ export default function Navbar() {
             exit={{ opacity: 0, y: -20 }}
             transition={{ type: "spring", stiffness: 120, damping: 20 }}
             ref={menuRef}
-            className="absolute top-full left-0 w-full bg-gray-900/95 border-t border-gray-700 
+            className="absolute top-full left-0 w-full bg-gray-950/95 border-t border-gray-700 
               backdrop-blur-md shadow-lg z-40 flex flex-col md:hidden"
           >
             {navLinks.map((link, idx) => (

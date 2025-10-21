@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 
 // Bubble Background Component
@@ -193,99 +194,102 @@ export default function LandingPage() {
   const [showPopup, setShowPopup] = useState(false);
 
   return (
-    <div className="w-full h-screen relative overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 font-sans">
-      <Bubbles /> {/* Floating Bubbles */}
-      {/* Navbar */}
-      <div className="fixed top-0 left-0 w-full z-50">
-        <Navbar />
-      </div>
-      {/* Main Content */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-white z-10">
-        <ParticleText />
-
-        <div className="mt-4 space-y-2">
-          <DecryptingText
-            targetText="Your trusted AI platform for healthcare fraud detection, accurate diagnostics, and legal insights."
-            speed={3}
-          />
-          <DecryptingText targetText="Fast. Reliable. Legit." speed={3} />
+    <>
+      <div className="w-full h-screen relative overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 font-sans">
+        <Bubbles /> {/* Floating Bubbles */}
+        {/* Navbar */}
+        <div className="top-0 left-0 w-full z-50">
+          <Navbar />
         </div>
+        {/* Main Content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-white z-10">
+          <ParticleText />
 
-        <div className="mt-6">
-          <ShimmerButton
-            onClick={() => setShowPopup(true)}
-            text="Get Started"
-          />
+          <div className="mt-4 space-y-2">
+            <DecryptingText
+              targetText="Your trusted AI platform for healthcare fraud detection, accurate diagnostics, and legal insights."
+              speed={3}
+            />
+            <DecryptingText targetText="Fast. Reliable. Legit." speed={3} />
+          </div>
+
+          <div className="mt-6">
+            <ShimmerButton
+              onClick={() => setShowPopup(true)}
+              text="Get Started"
+            />
+          </div>
         </div>
-      </div>
-      {/* Popup */}
-      {showPopup && (
-        <div
-          className="fixed inset-0 flex items-center justify-center z-50 bg-black/60"
-          onClick={() => setShowPopup(false)} // close on backdrop click
-        >
-          <motion.div
-            onClick={(e) => e.stopPropagation()} // prevent close inside
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="w-full max-w-md mx-auto 
+        {/* Popup */}
+        {showPopup && (
+          <div
+            className="fixed inset-0 flex items-center justify-center z-50 bg-black/60"
+            onClick={() => setShowPopup(false)} // close on backdrop click
+          >
+            <motion.div
+              onClick={(e) => e.stopPropagation()} // prevent close inside
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="w-full max-w-md mx-auto 
                        [background:linear-gradient(45deg,#080b11,theme(colors.slate.800)_50%,#172033)_padding-box,
                        conic-gradient(from_var(--border-angle),theme(colors.slate.600/.48)_80%,theme(colors.teal.500)_86%,
                        theme(colors.cyan.300)_90%,theme(colors.teal.500)_94%,theme(colors.slate.600/.48))_border-box] 
                        rounded-2xl border border-transparent animate-border"
-          >
-            {/* Inner Popup Content */}
-            <div className="relative text-left z-10 px-8 py-10 rounded-2xl w-full bg-white dark:bg-black shadow-2xl ring-1 ring-cyan-400/40">
-              {/* Close Button */}
-              <button
-                className="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold"
-                onClick={() => setShowPopup(false)}
-              >
-                &times;
-              </button>
+            >
+              {/* Inner Popup Content */}
+              <div className="relative text-left z-10 px-8 py-10 rounded-2xl w-full bg-white dark:bg-black shadow-2xl ring-1 ring-cyan-400/40">
+                {/* Close Button */}
+                <button
+                  className="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold"
+                  onClick={() => setShowPopup(false)}
+                >
+                  &times;
+                </button>
 
-              {/* MedLegit Logo */}
-              <div className="absolute top-4 left-6 text-2xl font-extrabold text-cyan-400">
-                MedLegit
-              </div>
+                {/* MedLegit Logo */}
+                <div className="absolute top-4 left-6 text-2xl font-extrabold text-cyan-400">
+                  MedLegit
+                </div>
 
-              {/* Popup Content */}
-              <div className="mt-10 space-y-3 text-gray-700 dark:text-gray-200">
-                <p>
-                  We provide{" "}
-                  <span className="text-cyan-400 font-semibold">
-                    AI-assisted medical diagnostics
-                  </span>
-                  , fraud detection tools, and NLP-based legal risk analysis to
-                  streamline your workflow.
-                </p>
-                <p>
-                  Our platform ensures{" "}
-                  <span className="text-cyan-400 font-semibold">
-                    data security, accuracy
-                  </span>
-                  , and actionable insights for healthcare and legal
-                  professionals.
-                </p>
-                <p>
-                  Join thousands of users who trust MedLegit to make informed
-                  decisions faster and more reliably.
-                </p>
-              </div>
+                {/* Popup Content */}
+                <div className="mt-10 space-y-3 text-gray-700 dark:text-gray-200">
+                  <p>
+                    We provide{" "}
+                    <span className="text-cyan-400 font-semibold">
+                      AI-assisted medical diagnostics
+                    </span>
+                    , fraud detection tools, and NLP-based legal risk analysis
+                    to streamline your workflow.
+                  </p>
+                  <p>
+                    Our platform ensures{" "}
+                    <span className="text-cyan-400 font-semibold">
+                      data security, accuracy
+                    </span>
+                    , and actionable insights for healthcare and legal
+                    professionals.
+                  </p>
+                  <p>
+                    Join thousands of users who trust MedLegit to make informed
+                    decisions faster and more reliably.
+                  </p>
+                </div>
 
-              {/* Sign Up Button */}
-              <div className="mt-6 flex justify-center">
-                <ShimmerButton
-                  onClick={() => navigate("/signup")}
-                  text="Sign Up"
-                />
+                {/* Sign Up Button */}
+                <div className="mt-6 flex justify-center">
+                  <ShimmerButton
+                    onClick={() => navigate("/signup")}
+                    text="Sign Up"
+                  />
+                </div>
               </div>
-            </div>
-          </motion.div>
-        </div>
-      )}
-    </div>
+            </motion.div>
+          </div>
+        )}
+      </div>
+      <Footer />
+    </>
   );
 }

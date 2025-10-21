@@ -1,14 +1,11 @@
 export default function Dashboard() {
   return (
-    <div className="space-y-10 text-gray-100">
+    <div className="fixed space-y-10 text-gray-100">
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-4xl font-bold text-indigo-400 tracking-tight">
           Dashboard Overview
         </h2>
-        <button className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-lg shadow hover:shadow-lg transition">
-          Download Report
-        </button>
       </div>
 
       {/* Stat Cards */}
@@ -35,7 +32,9 @@ export default function Dashboard() {
         <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-6 rounded-2xl shadow-lg text-white hover:scale-105 transform transition">
           <h3 className="text-lg font-semibold">Legal Cases Processed</h3>
           <p className="text-4xl font-extrabold mt-2">9</p>
-          <p className="text-green-200 mt-1">NLP-based legal risk assessments</p>
+          <p className="text-green-200 mt-1">
+            NLP-based legal risk assessments
+          </p>
         </div>
       </div>
 
