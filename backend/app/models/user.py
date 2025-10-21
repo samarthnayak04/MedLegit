@@ -14,3 +14,4 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     fraud_cases = relationship("FraudCase", back_populates="user")
     pneumonia_cases = relationship("PneumoniaCase", back_populates="user")
+    # legal_cases = relationship("LegalCase", back_populates="user", cascade="all, delete-orphan")

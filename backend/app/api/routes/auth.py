@@ -46,7 +46,7 @@ def login(user: UserCreate, response: Response, db: Session = Depends(get_db)):
         value=refresh_token,
         httponly=True,
         max_age=7 * 24 * 60 * 60,  # 7 days
-        samesite="Lax",
+        samesite="none",   #"Lax"
         secure=False  # <-- change to True in production
     )
 
@@ -107,8 +107,11 @@ async def refresh_token(request: Request, response: Response, db: Session = Depe
 def logout(response: Response):
     # Delete cookie
     response.delete_cookie(
-        "refresh_token",
-        samesite="Lax",
-        secure=False  # <-- change to True in production
+        key="refresh_token", 
+        path="/",
+        samesite="None", # 🔹 In production with frontend on a different domain, set this to 'None'
+        secure=False,       # 🔹 In production: set to True to ensure cookie is sent only over HTTPS
+        httponly=True          # Optional, but recommended for security
     )
+
     return {"msg": "Logged out"}
