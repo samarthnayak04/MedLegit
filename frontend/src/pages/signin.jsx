@@ -13,10 +13,18 @@ export default function Signin() {
     e.preventDefault();
     try {
       const res = await api.post("/auth/login", { email, password });
+      const token = res.data.access_token;
       localStorage.setItem("access_token", res.data.access_token);
+      const profileRes = await api.get("/user/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      localStorage.setItem("user", JSON.stringify(profileRes.data));
       navigate("/dashboard");
+      // window.location.href = "/dashboard";
     } catch (err) {
-      toast.error("Login Failed.Please log in again.");
+      toast.error("Login Failed.Please log in again.", {
+        position: "top-center",
+      });
     }
   };
 
@@ -43,7 +51,7 @@ export default function Signin() {
           <div className="relative bg-gray-900 dark:bg-black rounded-2xl p-10 text-center w-full">
             <h1 className="text-3xl font-bold mb-2 text-white">Sign In</h1>
             <p className="text-sm mb-6 text-gray-400">
-              Choose your preferred login method
+              Enter your credentials.
             </p>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 mb-6">

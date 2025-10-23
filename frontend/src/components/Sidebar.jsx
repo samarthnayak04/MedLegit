@@ -16,6 +16,57 @@ export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const getInitials = (first, last) => {
+    const f = first?.charAt(0)?.toUpperCase() || "";
+    const l = last?.charAt(0)?.toUpperCase() || "";
+    return f + l;
+  };
+
+  const getColorFromName = (name) => {
+    const colors = [
+      "#5c4d3b",
+      "#334155", // slate-700
+      "#475569", // slate-600
+      "#1e293b", // slate-800
+      "#0f172a", // slate-900
+      "#3f3f46", // zinc-700
+      "#4b5563", //
+
+      "#34495e", // Dark Navy
+      "#3b4d45", // Dark Olive
+      "#5d3e4a", // Deep Burgundy
+      "#455a64", // Dark Teal
+      "#4a3e5d", // Dark Plum
+      // Dark Oc
+    ];
+    const hash = Array.from(name).reduce(
+      (acc, char) => acc + char.charCodeAt(0),
+      0
+    );
+
+    const index = hash % colors.length;
+    return colors[index];
+  };
+
+  const initials = getInitials(user.first_name, user.last_name);
+  const bgColor = getColorFromName(initials);
+
+  const fullName = `${
+    user.first_name
+      ? user.first_name[0].toUpperCase() + user.first_name.slice(1)
+      : ""
+  } ${
+    user.last_name
+      ? user.last_name[0].toUpperCase() + user.last_name.slice(1)
+      : ""
+  }`;
+  // const capitalize = (s) =>
+  //   s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
+
+  // const fullName = `${capitalize(user.first_name)} ${capitalize(
+  //   user.last_name
+  // )}`.trim();
 
   useEffect(() => {
     const handleResize = () => {
@@ -86,24 +137,45 @@ export default function Sidebar() {
         >
           {/* User Avatar + Toggle */}
           <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-3">
-              <img
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"
-                alt="User Avatar"
-                className="h-10 w-10 rounded-full object-cover"
-              />
-              {isExpanded && (
-                <div className="flex flex-col">
-                  <span className="text-white font-medium">John Doe</span>
-                  <span className="text-gray-400 text-sm">Admin</span>
-                </div>
-              )}
+            {/* Avatar + Name */}
+            <div className="flex items-center gap-3 overflow-hidden">
+              {/* Dynamic Initials Avatar */}
+              <motion.div
+                initial={{ scale: 1, opacity: 1 }}
+                animate={
+                  isExpanded
+                    ? { scale: 1, opacity: 1 }
+                    : { scale: 0, opacity: 0 }
+                }
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="h-10 w-10 rounded-full flex items-center justify-center 
+                 text-white font-semibold text-lg shadow-md origin-left"
+                style={{ backgroundColor: bgColor }}
+              >
+                {initials || "U"}
+              </motion.div>
+
+              {/* User name */}
+              <motion.div
+                initial={{ opacity: 1, x: 0 }}
+                animate={
+                  isExpanded ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }
+                }
+                transition={{ duration: 0.3 }}
+                className="flex flex-col"
+              >
+                <span className="text-white font-semibold text-lg drop-shadow-md">
+                  {fullName}
+                </span>
+              </motion.div>
             </div>
+
+            {/* Toggle button - always visible */}
             <button
               onClick={toggleSidebar}
-              className="text-gray-300 hover:text-white focus:outline-none"
+              className="text-gray-300 hover:text-white focus:outline-none flex-shrink-0"
             >
-              <FiMenu />
+              <FiMenu size={20} />
             </button>
           </div>
 

@@ -258,9 +258,12 @@ export default function LandingPage() {
                   <p>
                     We provide{" "}
                     <span className="text-cyan-400 font-semibold">
-                      AI-assisted medical diagnostics
+                      AI-assisted medical diagnostics, fraud detection
                     </span>
-                    , fraud detection tools, and NLP-based legal risk analysis
+                    , and NLP-based{" "}
+                    <span className="text-cyan-400 font-semibold">
+                      legal risk analysis
+                    </span>{" "}
                     to streamline your workflow.
                   </p>
                   <p>
@@ -272,17 +275,24 @@ export default function LandingPage() {
                     professionals.
                   </p>
                   <p>
-                    Join thousands of users who trust MedLegit to make informed
-                    decisions faster and more reliably.
+                    Join users who trust MedLegit to make informed decisions
+                    faster and more reliably.
                   </p>
                 </div>
 
                 {/* Sign Up Button */}
-                <div className="mt-6 flex justify-center">
+                <div className="mt-6 flex justify-center space-x-4">
                   <ShimmerButton
                     onClick={() => navigate("/signup")}
                     text="Sign Up"
                   />
+
+                  <button
+                    onClick={() => navigate("/signin")}
+                    className="px-8 py-3 rounded-full text-cyan-400 border border-cyan-400 hover:bg-cyan-400 hover:text-black transition-all"
+                  >
+                    Sign In
+                  </button>
                 </div>
               </div>
             </motion.div>

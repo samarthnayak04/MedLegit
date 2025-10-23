@@ -4,7 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import FraudDetection from "./pages/FraudDetection";
 import DiagnosticAnalysis from "./pages/DiagnosticAnalysis";
 import LegalAnalysis from "./pages/LegalAnalysis";
-
+import ActivityPage from "./pages/ActivityPage";
 import Home from "./pages/LandingPage";
 import Signup from "./pages/Signup";
 import toast, { Toaster } from "react-hot-toast";
@@ -29,12 +29,13 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<Dashboard />} />
           {/* Protected pages */}
           <Route element={<PrivateRoute />}>
+            <Route index element={<Dashboard />} />
             <Route path="fraud" element={<FraudDetection />} />
             <Route path="diagnostic" element={<DiagnosticAnalysis />} />
             <Route path="legal" element={<LegalAnalysis />} />
+            <Route path="activities" element={<ActivityPage />} />
           </Route>
           {/* Default fallback */}
           <Route path="*" element={<Navigate to="/signin" />} />

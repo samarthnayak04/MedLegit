@@ -1,5 +1,5 @@
 "use client";
-
+import toast from "react-hot-toast";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
@@ -7,17 +7,30 @@ import api from "../api/axios";
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/auth/signup", { email, password });
-      alert("Signup successful! Please login.");
+      await api.post("/auth/signup", {
+        email,
+        password,
+        first_name: firstName,
+        last_name: lastName,
+      });
+
+      toast.success("Signup successful.Please log in.", {
+        position: "top-center",
+      });
       navigate("/signin");
     } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.detail || "Signup failed");
+      // console.error(err);
+
+      toast.error("Signup Failed.Please try again", {
+        position: "top-center",
+      });
     }
   };
 
@@ -48,6 +61,24 @@ export default function Signup() {
             </p>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 mb-6">
+              <div className="flex gap-4 flex-wrap">
+                <input
+                  type="text"
+                  placeholder="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                  className="flex-1 min-w-[120px] p-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                />
+                <input
+                  type="text"
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                  className="flex-1 min-w-[120px] p-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                />
+              </div>
               <input
                 type="email"
                 placeholder="Email"
