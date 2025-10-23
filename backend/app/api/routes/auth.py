@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from sqlalchemy.orm import Session
-from app.schemas.user import UserCreate, UserOut, Token
+from app.schemas.user import UserCreate, UserOut, Token,UserLogin
 from app.models.user import User
 from app.crud import user as crud_user
 from app.core.db import get_db
@@ -17,7 +17,7 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
     db_user = crud_user.get_user_by_email(db, user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
-    new_user = crud_user.create_user(db, user.email, user.password)
+    new_user = crud_user.create_user(db, user.email, user.password,user.first_name,user.last_name)
     return new_user
 
 
@@ -25,7 +25,7 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
 # LOGIN ROUTE
 # -------------------------
 @router.post("/login", response_model=Token)
-def login(user: UserCreate, response: Response, db: Session = Depends(get_db)):
+def login(user: UserLogin, response: Response, db: Session = Depends(get_db)):
     db_user = crud_user.get_user_by_email(db, user.email)
     if not db_user or not crud_user.verify_password(user.password, db_user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
@@ -46,14 +46,17 @@ def login(user: UserCreate, response: Response, db: Session = Depends(get_db)):
         value=refresh_token,
         httponly=True,
         max_age=7 * 24 * 60 * 60,  # 7 days
-        samesite="none",   #"Lax"
-        secure=False  # <-- change to True in production
+        samesite="Lax",   # change to "none" in production
+        secure=False,
+        path="/",     # <-- change to True in production
     )
 
     # Return access token (and refresh token optionally for Postman/dev testing)
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,  # optional, remove in production
+        # "first_name": db_user.first_name,
+        # "last_name": db_user.last_name,
         "token_type": "bearer"
     }
 
