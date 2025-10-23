@@ -9,28 +9,47 @@ from app.schemas.health import PneumoniaCaseOut
 class UserBase(BaseModel):
     id: int
     email: str
-    full_name: Optional[str] = None
+    # full_name: Optional[str] = None
     is_active: bool
     model_config = ConfigDict(from_attributes=True)
 
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
+    first_name: str
+    last_name: str
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
 
 class UserOut(BaseModel):
     id: int
     email: EmailStr
+    first_name:str
+    last_name:str
     created_at: datetime
     model_config = ConfigDict(from_attributes=True)
 
-class UserHistoryOut(BaseModel):
-    user: UserOut
-    fraud_cases: List[FraudCaseOut] = []
-    pneumonia_cases: List[PneumoniaCaseOut] = []
-    # legal_cases: List[LegalCaseOut] = []
+class DashboardActivity(BaseModel):
+    date: datetime
+    activity: str
+    status: str
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        orm_mode = True
+
+
+class UserDashboardOut(BaseModel):
+    user: UserOut
+    fraud_cases: int
+    medical_reports: int
+    # legal_cases: int
+    recent_activity: List[DashboardActivity]
+    
+    class Config:
+        orm_mode = True
 
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
+    

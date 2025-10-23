@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from app.models.fraud import FraudCase
 from typing import List
-
+from datetime import datetime, timezone
 def create_fraud_case(db: Session, user_id: int, provider: str, potential_fraud: str, fraud_prob: float):
     # Ensure fraud_prob is stored as percentage (rounded to 2 decimals)
     fraud_prob_percentage = round(fraud_prob, 2)
@@ -10,7 +10,8 @@ def create_fraud_case(db: Session, user_id: int, provider: str, potential_fraud:
         user_id=user_id,
         Provider=provider,
         PotentialFraud=potential_fraud,
-        Fraud_Probability=fraud_prob_percentage
+        Fraud_Probability=fraud_prob_percentage,
+        created_at=datetime.now(timezone.utc)
     )
     db.add(db_case)
     db.commit()

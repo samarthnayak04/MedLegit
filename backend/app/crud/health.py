@@ -1,11 +1,12 @@
 from sqlalchemy.orm import Session
 from app.models.health import PneumoniaCase
-
+from datetime import datetime, timezone
 def create_pneumonia_case(db: Session, user_id: str, prediction: str, confidence: float):
     case = PneumoniaCase(
         user_id=user_id,
         prediction=prediction,
-        confidence=confidence
+        confidence=confidence,
+        created_at=datetime.now(timezone.utc)
     )
     db.add(case)
     db.commit()
