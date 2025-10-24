@@ -25,16 +25,25 @@ export default function Sidebar() {
 
   const getColorFromName = (name) => {
     const colors = [
-      "#1F2937", // slate gray
-      "#264653", // dark teal
-      "#3A015C", // deep purple
-      "#581845", // burgundy
-      "#006D77", // teal
-      "#7B2CBF", // violet
-      "#2A9D8F", // turquoise
-      "#E76F51", // coral
-      "#457B9D", // blue-gray
-      "#9D4EDD", // soft purple
+      "#1F2937",
+      "#264653",
+      "#3A015C",
+      "#494A49",
+      "#581845",
+      "#5c4d3b",
+      "#334155", // slate-700
+      "#475569", // slate-600
+      "#1e293b", // slate-800
+      "#414b62ff", // slate-900
+      "#3f3f46", // zinc-700
+      "#4b5563", //
+
+      "#34495e", // Dark Navy
+      "#3b4d45", // Dark Olive
+      "#5d3e4a", // Deep Burgundy
+      "#455a64", // Dark Teal
+      "#4a3e5d", // Dark Plum
+      // Dark Oc
     ];
     const hash = Array.from(name).reduce(
       (acc, char) => acc + char.charCodeAt(0),
@@ -132,9 +141,9 @@ export default function Sidebar() {
             flex flex-col z-30 overflow-hidden`}
         >
           {/* User Avatar + Toggle */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-4 mt-2">
             {/* Avatar + Name */}
-            <div className="flex items-center gap-3 overflow-hidden">
+            <div className="flex items-center gap-2 overflow-hidden">
               {/* Dynamic Initials Avatar */}
               <motion.div
                 initial={{ scale: 1, opacity: 1 }}
@@ -144,7 +153,7 @@ export default function Sidebar() {
                     : { scale: 0, opacity: 0 }
                 }
                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="h-10 w-10 rounded-full flex items-center justify-center 
+                className="h-9 w-9 md:h-9 md:w-9 rounded-full flex items-center justify-center 
                  text-white font-semibold text-lg shadow-md origin-left"
                 style={{ backgroundColor: bgColor }}
               >
@@ -160,7 +169,7 @@ export default function Sidebar() {
                 transition={{ duration: 0.3 }}
                 className="flex flex-col"
               >
-                <span className="text-white font-semibold text-lg drop-shadow-md">
+                <span className="text-sm md:text-base font-semibold text-white drop-shadow-md">
                   {fullName}
                 </span>
               </motion.div>
