@@ -13,12 +13,16 @@ import About from "./pages/Aboutus";
 import Services from "./pages/services";
 import Contact from "./pages/contact";
 import Signin from "./pages/Signin";
+import AboutFraudDet from "./servicespages/AboutFraudDet";
+import AboutDiagno from "./servicespages/AboutDiagns";
+import AboutLegalAnal from "./servicespages/AboutLegalAnal";
 import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
     <>
       <Routes>
+
         {/*landing page */}
         <Route path="/" element={<Home />}></Route>
         <Route path="/signup" element={<Signup />} />
@@ -28,7 +32,12 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
+        {/* About pages for services (public) */}
+        <Route path="/services/aboutfrauddet" element={<AboutFraudDet />} />
+        <Route path="/services/aboutdiagns" element={<AboutDiagno />} />
+        <Route path="/services/aboutlegalanal" element={<AboutLegalAnal />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
+
           {/* Protected pages */}
           <Route element={<PrivateRoute />}>
             <Route index element={<Dashboard />} />
