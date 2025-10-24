@@ -25,20 +25,16 @@ export default function Sidebar() {
 
   const getColorFromName = (name) => {
     const colors = [
-      "#5c4d3b",
-      "#334155", // slate-700
-      "#475569", // slate-600
-      "#1e293b", // slate-800
-      "#0f172a", // slate-900
-      "#3f3f46", // zinc-700
-      "#4b5563", //
-
-      "#34495e", // Dark Navy
-      "#3b4d45", // Dark Olive
-      "#5d3e4a", // Deep Burgundy
-      "#455a64", // Dark Teal
-      "#4a3e5d", // Dark Plum
-      // Dark Oc
+      "#1F2937", // slate gray
+      "#264653", // dark teal
+      "#3A015C", // deep purple
+      "#581845", // burgundy
+      "#006D77", // teal
+      "#7B2CBF", // violet
+      "#2A9D8F", // turquoise
+      "#E76F51", // coral
+      "#457B9D", // blue-gray
+      "#9D4EDD", // soft purple
     ];
     const hash = Array.from(name).reduce(
       (acc, char) => acc + char.charCodeAt(0),
