@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 export default function FraudDetection() {
   const [results, setResults] = useState([]);
   const [fileName, setFileName] = useState("");
+  const [fileContent, setFileContent] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef(null);
@@ -40,7 +41,18 @@ export default function FraudDetection() {
       }
     }
   };
-
+  const readCSVFile = (file) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target.result;
+      const lines = text
+        .trim()
+        .split("\n")
+        .map((line) => line.split(","));
+      setFileContent(lines);
+    };
+    reader.readAsText(file);
+  };
   // Handle file input
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
@@ -69,6 +81,7 @@ export default function FraudDetection() {
   const handleReset = () => {
     setFileName("");
     setResults([]);
+    setFileContent([]);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -121,6 +134,43 @@ export default function FraudDetection() {
           )}
         </div>
       </div>
+      {/* 👇 Display uploaded CSV content */}
+      {fileContent.length > 0 && (
+        <div className="p-6 shadow-md rounded-2xl mb-6 border border-gray-700 bg-gray-900">
+          <h3 className="text-xl font-semibold mb-4 text-indigo-300">
+            Uploaded CSV Preview
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-gray-100">
+              <thead>
+                <tr className="bg-gray-800 text-left text-gray-200">
+                  {fileContent[0].map((header, i) => (
+                    <th key={i} className="p-3 border-b border-gray-700">
+                      {header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {fileContent.slice(1, 6).map((row, i) => (
+                  <tr key={i}>
+                    {row.map((cell, j) => (
+                      <td key={j} className="p-3 border-b border-gray-700">
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {fileContent.length > 6 && (
+            <p className="text-gray-400 text-sm mt-2">
+              Showing first 5 rows only...
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Results */}
       {loading && (

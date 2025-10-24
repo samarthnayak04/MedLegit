@@ -58,16 +58,7 @@ export default function Contact() {
                 <p className="text-white font-medium">contact@medlegit.com</p>
               </div>
             </motion.div>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-4 bg-gray-800 p-5 rounded-2xl shadow-lg"
-            >
-              <Phone className="w-6 h-6 text-indigo-400" />
-              <div>
-                <p className="text-gray-400 text-sm">Phone</p>
-                <p className="text-white font-medium">+91 98765 43210</p>
-              </div>
-            </motion.div>
+
             <motion.div
               whileHover={{ scale: 1.05 }}
               className="flex items-center gap-4 bg-gray-800 p-5 rounded-2xl shadow-lg"
