@@ -62,7 +62,7 @@ aiModels/**/*.json
 # Alembic / Migrations
 # ==========================
 # Track migrations in Git for versioned DB schema
-migrations/
+
 !migrations/env.py
 !migrations/script.py.mako
 # Ignore __pycache__ inside migrations
