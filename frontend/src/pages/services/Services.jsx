@@ -1,7 +1,14 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Shield, Heart, FileText } from "lucide-react";
-import Navbar from "../components/Navbar";
+import {
+  Shield,
+  Heart,
+  FileText,
+  Microscope,
+  Stethoscope,
+  Database,
+} from "lucide-react";
+import Navbar from "../../components/Navbar";
 import { Link } from "react-router-dom";
 
 const services = [
@@ -12,16 +19,16 @@ const services = [
     description:
       "AI-powered detection of suspicious insurance claims to prevent financial losses and ensure compliance.",
     gradient: "from-purple-600 to-indigo-600",
-    link: "/services/aboutfrauddet",
+    link: "/services/fraud-detection",
   },
   {
     id: 2,
     icon: <Heart className="w-10 h-10 text-red-400" />,
     title: "Medical Diagnosis",
     description:
-      "Advanced AI-assisted medical diagnostics for faster, accurate analysis of X-rays, CT scans, and reports.",
+      "Advanced AI-assisted medical diagnostics for faster, accurate analysis of X-rays to detect Pneumonia.",
     gradient: "from-blue-600 to-cyan-500",
-    link: "/services/aboutdiagns",
+    link: "/services/diagnostic-service",
   },
   {
     id: 3,
@@ -30,7 +37,7 @@ const services = [
     description:
       "NLP-based legal risk assessment and compliance checks to guide healthcare and insurance decisions.",
     gradient: "from-green-600 to-emerald-500",
-    link: "/services/aboutlegalanal",
+    link: "/services/legal-service",
   },
 ];
 
@@ -57,7 +64,8 @@ export default function Services() {
             Our Services
           </h2>
           <p className="mt-4 text-gray-300 text-lg md:text-xl">
-            Comprehensive solutions combining AI, healthcare, and legal expertise.
+            Comprehensive solutions combining AI, healthcare, and legal
+            expertise.
           </p>
         </motion.div>
 
@@ -76,8 +84,7 @@ export default function Services() {
               </div>
               <h3 className="text-2xl font-bold text-white">{service.title}</h3>
               <p className="text-gray-300">{service.description}</p>
-              
-              {/* Link to About page */}
+
               <Link
                 to={service.link}
                 className="mt-auto py-2 px-6 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full text-white font-medium shadow-lg hover:shadow-xl transition"
