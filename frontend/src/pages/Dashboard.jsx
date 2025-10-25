@@ -57,7 +57,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen w-full p-4 sm:p-6 md:p-8 text-gray-100 overflow-x-hidden">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6   mt-6 md:mt-10 gap-3">
         <h2 className="text-3xl sm:text-4xl font-bold text-indigo-400 tracking-tight">
           Overview
         </h2>

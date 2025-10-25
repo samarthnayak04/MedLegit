@@ -158,7 +158,6 @@ const ShimmerButton = ({ onClick, text }) => {
   `;
   return (
     <div className="flex items-center justify-center font-sans">
-      <style>{customCss}</style>
       <button
         onClick={onClick}
         className="relative inline-flex items-center justify-center p-[1.5px] bg-gray-300 dark:bg-black rounded-full overflow-hidden group cursor-pointer w-[160px] sm:w-auto"

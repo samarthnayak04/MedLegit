@@ -11,7 +11,7 @@ import {
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
-export default function Navbar() {
+export default function Navbar({ fixed = false }) {
   const [mobileMenu, setMobileMenu] = useState(false);
   const menuRef = useRef(null);
 
@@ -38,10 +38,14 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="w-full fixed top-0 left-0 z-50">
+    <header
+      className={`w-full ${
+        fixed ? "fixed top-0 left-0 z-50" : "relative z-40 mb-8"
+      }`}
+    >
       <motion.div
         className="flex justify-between items-center px-4 sm:px-6 py-3 rounded-b-2xl 
-          bg-slate-900/70 backdrop-blur-xl shadow-lg shadow-black/40 border-b border-blue-800/30 relative"
+          bg-slate-900/50 backdrop-blur-xl shadow-lg shadow-black/40 border-b border-blue-800/30 relative"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 120, damping: 20 }}

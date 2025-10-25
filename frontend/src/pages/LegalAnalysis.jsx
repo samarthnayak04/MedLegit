@@ -108,8 +108,8 @@ export default function LegalAnalysisTabs() {
   };
 
   return (
-    <div className="p-6 min-h-[32rem] bg-gradient-to-br from-gray-900 to-gray-1000 text-gray-100 font-sans">
-      <h2 className="text-3xl font-bold mb-6 text-indigo-400">
+    <div className="p-6 min-h-[32rem] bg-gradient-to-br from-gray-1000 to-gray-1100 text-gray-100 font-sans">
+      <h2 className="text-3xl font-bold mb-6 mt-6 md:mt-10 text-indigo-400">
         Legal Case Analysis
       </h2>
 

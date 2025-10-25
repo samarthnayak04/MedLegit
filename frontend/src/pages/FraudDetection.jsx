@@ -89,7 +89,7 @@ export default function FraudDetection() {
 
   return (
     <div className="p-6 text-gray-100">
-      <h2 className="text-3xl font-bold mb-6 text-indigo-400">
+      <h2 className="text-3xl font-bold mb-6 mt-8 md:mt-12 gap-3 text-indigo-400">
         Fraud Detection
       </h2>
 

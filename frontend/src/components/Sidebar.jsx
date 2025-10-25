@@ -127,7 +127,7 @@ export default function Sidebar() {
           variants={sidebarVariants}
           transition={{ duration: 0.3 }}
           className={`fixed left-0 top-0 md:top-10 h-screen md:h-[calc(95vh)] mt-0 md:mt-4  
-            bg-gradient-to-br from-gray-900/70 to-gray-800/70 
+            bg-gradient-to-br from-gray-900/30 to-gray-900/50 
             backdrop-blur-lg border border-gray-800 shadow-xl rounded-2xl p-6
             flex flex-col z-30 overflow-hidden`}
         >

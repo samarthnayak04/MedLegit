@@ -40,7 +40,7 @@ const Footer = () => {
 
         {/* Right: Contact */}
         <div className="space-y-4">
-          <h3 className="text-xl font-bold text-white mb-2">Contact</h3>
+          <h3 className="text-xl font-bold text-white mb-2">Contact us</h3>
 
           <div className="flex items-start gap-3">
             <Mail className="w-5 h-5 text-cyan-400 mt-1" />
