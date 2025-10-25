@@ -24,7 +24,7 @@ api.interceptors.response.use(
       try {
         // Use plain axios with the same host (localhost)
         const res = await axios.post(
-          "http://localhost:8000/api/auth/refresh",
+          "/auth/refresh",
           {},
           { withCredentials: true }
         );
