@@ -63,9 +63,10 @@ const Footer = () => {
       {/* Bottom Line */}
       <div className="text-center text-gray-500 text-xs py-2 mt-4 border-t border-gray-700 ">
         <p className="mt-1 pt-2">
-          &copy; {new Date().getFullYear()} MedLegit. Built with{" "}
-          <span className="text-cyan-400">AI + Trust</span> 🧠⚖️. All rights
-          reserved.
+          &copy; {new Date().getFullYear()} MedLegit.All rights reserved.
+        </p>
+        <p>
+          Driven by <span className="text-cyan-400">Technology+Trust</span> 🧠⚖️
         </p>
       </div>
     </footer>
