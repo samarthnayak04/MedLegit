@@ -55,16 +55,16 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="fixed min-h-screen p-8 text-gray-100">
+    <div className="min-h-screen w-full p-4 sm:p-6 md:p-8 text-gray-100 overflow-x-hidden">
       {/* Page Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-4xl font-bold text-indigo-400 tracking-tight">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
+        <h2 className="text-3xl sm:text-4xl font-bold text-indigo-400 tracking-tight">
           Overview
         </h2>
       </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-10">
         {/* Fraud Detection */}
         <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-6 rounded-2xl shadow-lg text-white hover:scale-105 transform transition">
           <h3 className="text-lg font-semibold">Insurance Claims Checked</h3>
@@ -101,7 +101,7 @@ export default function Dashboard() {
 
       {/* Recent Activity */}
       <div>
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
           <h3 className="text-2xl font-bold">Recent Activity</h3>
           <Link
             to="/dashboard/activities"
@@ -111,13 +111,17 @@ export default function Dashboard() {
           </Link>
         </div>
 
-        <div className="overflow-hidden rounded-2xl shadow-lg bg-gray-900 border border-gray-800">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto rounded-2xl shadow-lg bg-gray-900 border border-gray-800">
+          <table className="min-w-full text-left border-collapse">
             <thead className="bg-gray-800">
               <tr>
-                <th className="p-5 font-medium text-gray-300">Date</th>
-                <th className="p-5 font-medium text-gray-300">Activity</th>
-                <th className="p-5 font-medium text-gray-300 text-center">
+                <th className="p-4 sm:p-5 font-medium text-gray-300 whitespace-nowrap">
+                  Date
+                </th>
+                <th className="p-4 sm:p-5 font-medium text-gray-300 whitespace-nowrap">
+                  Activity
+                </th>
+                <th className="p-4 sm:p-5 font-medium text-gray-300 text-center whitespace-nowrap">
                   Status
                 </th>
               </tr>
@@ -141,15 +145,17 @@ export default function Dashboard() {
                       key={idx}
                       className="border-t border-gray-800 hover:bg-gray-800 transition"
                     >
-                      <td className="p-5">
+                      <td className="p-4 sm:p-5 whitespace-nowrap">
                         {new Date(item.date).toLocaleDateString("en-US", {
                           day: "2-digit",
                           month: "short",
                           year: "numeric",
                         })}
                       </td>
-                      <td className="p-5">{item.activity}</td>
-                      <td className="p-5 text-center">
+                      <td className="p-4 sm:p-5 whitespace-nowrap">
+                        {item.activity}
+                      </td>
+                      <td className="p-4 sm:p-5 text-center whitespace-nowrap">
                         <span
                           className={`px-3 py-1 rounded-full text-sm font-semibold shadow-md ${colorClass}`}
                         >

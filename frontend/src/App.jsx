@@ -1,44 +1,60 @@
-import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+
+// Layouts
 import DashboardLayout from "./layout/DashboardLayout";
+
+// Components
+import PrivateRoute from "./components/PrivateRoute";
+
+// Dashboard Pages
 import Dashboard from "./pages/Dashboard";
 import FraudDetection from "./pages/FraudDetection";
 import DiagnosticAnalysis from "./pages/DiagnosticAnalysis";
 import LegalAnalysis from "./pages/LegalAnalysis";
 import ActivityPage from "./pages/ActivityPage";
-import Home from "./pages/LandingPage";
-import Signup from "./pages/Signup";
-import toast, { Toaster } from "react-hot-toast";
 
+// Public Pages
+import Home from "./pages/LandingPage";
 import About from "./pages/Aboutus";
-import Services from "./pages/services";
-import Contact from "./pages/contact";
+
+import Contact from "./pages/Contact";
+import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
-import AboutFraudDet from "./servicespages/AboutFraudDet";
-import AboutDiagno from "./servicespages/AboutDiagns";
-import AboutLegalAnal from "./servicespages/AboutLegalAnal";
-import PrivateRoute from "./components/PrivateRoute";
+import DetectionService from "./pages/services/DetectionService";
+import Services from "./pages/Services/Services";
+import LegalService from "./pages/services/LegalService";
+import DiagnosticService from "./pages/services/DiagnosticService";
+
+// Service Detail Pages
 
 function App() {
   return (
     <>
       <Routes>
-
-        {/*landing page */}
-        <Route path="/" element={<Home />}></Route>
+        {/* Landing & Auth */}
+        <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
 
-        {/* Public pages */}
+        {/* Public Pages */}
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
-        {/* About pages for services (public) */}
-        <Route path="/services/aboutfrauddet" element={<AboutFraudDet />} />
-        <Route path="/services/aboutdiagns" element={<AboutDiagno />} />
-        <Route path="/services/aboutlegalanal" element={<AboutLegalAnal />} />
-        <Route path="/dashboard" element={<DashboardLayout />}>
 
-          {/* Protected pages */}
+        {/* Service Detail Pages */}
+        <Route
+          path="/services/fraud-detection"
+          element={<DetectionService />}
+        />
+        <Route
+          path="/services/diagnostic-service"
+          element={<DiagnosticService />}
+        />
+        <Route path="/services/legal-service" element={<LegalService />} />
+
+        {/* Protected Dashboard Routes */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
           <Route element={<PrivateRoute />}>
             <Route index element={<Dashboard />} />
             <Route path="fraud" element={<FraudDetection />} />
@@ -46,10 +62,12 @@ function App() {
             <Route path="legal" element={<LegalAnalysis />} />
             <Route path="activities" element={<ActivityPage />} />
           </Route>
-          {/* Default fallback */}
+
+          {/* Default fallback inside dashboard */}
           <Route path="*" element={<Navigate to="/signin" />} />
         </Route>
       </Routes>
+
       <Toaster position="top-right" reverseOrder={false} />
     </>
   );

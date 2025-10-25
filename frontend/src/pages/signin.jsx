@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import toast from "react-hot-toast";
@@ -8,7 +8,12 @@ export default function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -22,9 +27,13 @@ export default function Signin() {
       navigate("/dashboard");
       // window.location.href = "/dashboard";
     } catch (err) {
-      toast.error("Login Failed.Please log in again.", {
-        position: "top-center",
-      });
+      if (err.response && err.response.status === 401) {
+        toast.error("Invalid email or password", { position: "top-center" });
+      } else {
+        toast.error("Login failed. Please try again", {
+          position: "top-center",
+        });
+      }
     }
   };
 

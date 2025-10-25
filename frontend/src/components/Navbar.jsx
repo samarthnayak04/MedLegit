@@ -1,7 +1,14 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiMenu, FiX, FiHome, FiInfo, FiSettings, FiPhone } from "react-icons/fi";
+import {
+  FiMenu,
+  FiX,
+  FiHome,
+  FiInfo,
+  FiSettings,
+  FiPhone,
+} from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
@@ -22,35 +29,34 @@ export default function Navbar() {
   const navLinks = [
     { name: "Home", to: "/dashboard", icon: <FiHome className="w-5 h-5" /> },
     { name: "About Us", to: "/about", icon: <FiInfo className="w-5 h-5" /> },
-    { name: "Services", to: "/services", icon: <FiSettings className="w-5 h-5" /> },
+    {
+      name: "Services",
+      to: "/services",
+      icon: <FiSettings className="w-5 h-5" />,
+    },
     { name: "Contact", to: "/contact", icon: <FiPhone className="w-5 h-5" /> },
   ];
 
   return (
-    <header className="w-full relative z-50">
+    <header className="w-full fixed top-0 left-0 z-50">
       <motion.div
-        className="flex justify-between items-center px-4 sm:px-6 py-3 rounded-2xl 
-        bg-slate-900/70 backdrop-blur-xl shadow-lg shadow-black/40 
-        border border-blue-800/30 relative"
+        className="flex justify-between items-center px-4 sm:px-6 py-3 rounded-b-2xl 
+          bg-slate-900/70 backdrop-blur-xl shadow-lg shadow-black/40 border-b border-blue-800/30 relative"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 120, damping: 20 }}
       >
-       {/* Logo */}
-      <Link to="/" className="flex items-center gap-1">
-        <img
-          src="/images/logo.png"
-          alt="MedLegit Icon"
-          className="w-11 h-11 scale-165 relative top-[1px]" // Use w-6 h-6 for sizing
-        />
-        <span
-          className="inline-block text-2xl md:text-4xl font-extrabold tracking-wide 
-               text-white leading-none relative top-[1px] 
-               drop-shadow-lg"
-        >
-          MedLegit
-        </span>
-      </Link>
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-1">
+          <img
+            src="/images/logo.png"
+            alt="MedLegit Logo"
+            className="w-11 h-11 scale-165 relative top-[1px]"
+          />
+          <span className="inline-block text-2xl md:text-3xl font-extrabold tracking-wide text-white leading-none relative top-[1px] drop-shadow-lg">
+            MedLegit
+          </span>
+        </Link>
 
         {/* Desktop Links */}
         <nav className="hidden md:flex items-center gap-4">
@@ -61,7 +67,6 @@ export default function Navbar() {
               whileHover={{ y: -2 }}
               transition={{ type: "spring", stiffness: 120, damping: 20 }}
             >
-              {/* Glow effect on hover */}
               <motion.div
                 className="absolute inset-0 rounded-lg pointer-events-none"
                 style={{
@@ -74,8 +79,7 @@ export default function Navbar() {
               />
               <Link
                 to={link.to}
-                className="flex items-center gap-2 px-4 py-2 text-gray-200 hover:text-cyan-400 
-                  transition-colors rounded-lg relative z-10 font-medium"
+                className="flex items-center gap-2 px-4 py-2 text-gray-200 hover:text-cyan-400 transition-colors rounded-lg relative z-10 font-medium"
               >
                 {link.icon}
                 <span>{link.name}</span>
@@ -90,7 +94,11 @@ export default function Navbar() {
           onClick={() => setMobileMenu(!mobileMenu)}
           className="md:hidden text-gray-300 hover:text-white focus:outline-none"
         >
-          {mobileMenu ? <FiX className="w-7 h-7" /> : <FiMenu className="w-7 h-7" />}
+          {mobileMenu ? (
+            <FiX className="w-7 h-7" />
+          ) : (
+            <FiMenu className="w-7 h-7" />
+          )}
         </button>
 
         {/* Mobile Menu */}
@@ -102,16 +110,14 @@ export default function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ type: "spring", stiffness: 120, damping: 20 }}
-              className="absolute top-full left-0 w-full bg-gray-950/95 backdrop-blur-md 
-                border-t border-gray-700 shadow-lg flex flex-col md:hidden"
+              className="absolute top-full left-0 w-full bg-gray-950/95 backdrop-blur-md border-t border-gray-700 shadow-lg flex flex-col md:hidden"
             >
               {navLinks.map((link, idx) => (
                 <Link
                   key={idx}
                   to={link.to}
                   onClick={() => setMobileMenu(false)}
-                  className="flex items-center gap-2 px-6 py-4 text-gray-300 hover:text-cyan-400 
-                    hover:bg-gray-800 transition-all duration-300"
+                  className="flex items-center gap-2 px-6 py-4 text-gray-300 hover:text-cyan-400 hover:bg-gray-800 transition-all duration-300"
                 >
                   {link.icon}
                   {link.name}

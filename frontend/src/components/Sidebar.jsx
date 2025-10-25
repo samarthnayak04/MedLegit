@@ -6,7 +6,6 @@ import {
   FiShield,
   FiActivity,
   FiFileText,
-  FiSettings,
   FiMenu,
   FiLogOut,
 } from "react-icons/fi";
@@ -17,6 +16,7 @@ export default function Sidebar() {
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+
   const getInitials = (first, last) => {
     const f = first?.charAt(0)?.toUpperCase() || "";
     const l = last?.charAt(0)?.toUpperCase() || "";
@@ -31,25 +31,22 @@ export default function Sidebar() {
       "#494A49",
       "#581845",
       "#5c4d3b",
-      "#334155", // slate-700
-      "#475569", // slate-600
-      "#1e293b", // slate-800
-      "#414b62ff", // slate-900
-      "#3f3f46", // zinc-700
-      "#4b5563", //
-
-      "#34495e", // Dark Navy
-      "#3b4d45", // Dark Olive
-      "#5d3e4a", // Deep Burgundy
-      "#455a64", // Dark Teal
-      "#4a3e5d", // Dark Plum
-      // Dark Oc
+      "#334155",
+      "#475569",
+      "#1e293b",
+      "#414b62ff",
+      "#3f3f46",
+      "#4b5563",
+      "#34495e",
+      "#3b4d45",
+      "#5d3e4a",
+      "#455a64",
+      "#4a3e5d",
     ];
     const hash = Array.from(name).reduce(
       (acc, char) => acc + char.charCodeAt(0),
       0
     );
-
     const index = hash % colors.length;
     return colors[index];
   };
@@ -66,12 +63,6 @@ export default function Sidebar() {
       ? user.last_name[0].toUpperCase() + user.last_name.slice(1)
       : ""
   }`;
-  // const capitalize = (s) =>
-  //   s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
-
-  // const fullName = `${capitalize(user.first_name)} ${capitalize(
-  //   user.last_name
-  // )}`.trim();
 
   useEffect(() => {
     const handleResize = () => {
@@ -135,16 +126,14 @@ export default function Sidebar() {
           animate={isExpanded ? "expanded" : "collapsed"}
           variants={sidebarVariants}
           transition={{ duration: 0.3 }}
-          className={`fixed left-0 top-10 h-[calc(95vh)] mt-4  
+          className={`fixed left-0 top-0 md:top-10 h-screen md:h-[calc(95vh)] mt-0 md:mt-4  
             bg-gradient-to-br from-gray-900/70 to-gray-800/70 
             backdrop-blur-lg border border-gray-800 shadow-xl rounded-2xl p-6
             flex flex-col z-30 overflow-hidden`}
         >
           {/* User Avatar + Toggle */}
           <div className="flex items-center justify-between mb-4 mt-2">
-            {/* Avatar + Name */}
             <div className="flex items-center gap-2 overflow-hidden">
-              {/* Dynamic Initials Avatar */}
               <motion.div
                 initial={{ scale: 1, opacity: 1 }}
                 animate={
@@ -154,13 +143,12 @@ export default function Sidebar() {
                 }
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="h-9 w-9 md:h-9 md:w-9 rounded-full flex items-center justify-center 
-                 text-white font-semibold text-lg shadow-md origin-left"
+                  text-white font-semibold text-lg shadow-md origin-left"
                 style={{ backgroundColor: bgColor }}
               >
                 {initials || "U"}
               </motion.div>
 
-              {/* User name */}
               <motion.div
                 initial={{ opacity: 1, x: 0 }}
                 animate={
@@ -175,7 +163,6 @@ export default function Sidebar() {
               </motion.div>
             </div>
 
-            {/* Toggle button - always visible */}
             <button
               onClick={toggleSidebar}
               className="text-gray-300 hover:text-white focus:outline-none flex-shrink-0"
@@ -209,14 +196,16 @@ export default function Sidebar() {
           <div className="mt-6">
             <button
               className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg 
-      text-red-500 hover:text-white hover:bg-red-600/20
-      transition-all duration-200 ${!isExpanded ? "justify-center" : ""}`}
+                text-red-500 hover:text-white hover:bg-red-600/20
+                transition-all duration-200 ${
+                  !isExpanded ? "justify-center" : ""
+                }`}
               onClick={async () => {
                 try {
-                  const res = await api.post("/auth/logout"); // path must match backend
+                  const res = await api.post("/auth/logout");
                   if (res.status === 200) {
-                    localStorage.removeItem("access_token"); // remove access token
-                    window.location.href = "/"; // redirect landing
+                    localStorage.removeItem("access_token");
+                    window.location.href = "/";
                     console.log("Logged out successfully");
                   } else {
                     console.error("Logout failed", res);

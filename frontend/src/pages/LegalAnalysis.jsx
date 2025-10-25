@@ -1,7 +1,7 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Upload } from 'lucide-react';
+"use client";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Upload } from "lucide-react";
 
 export default function LegalAnalysisTabs() {
   const [file, setFile] = useState(null);
@@ -11,9 +11,9 @@ export default function LegalAnalysisTabs() {
   const [isTabLoading, setIsTabLoading] = useState(false);
 
   const tabs = [
-    { id: 1, name: 'Case Summary', icon: '📄' },
-    { id: 2, name: 'Legal Implications', icon: '⚖️' },
-    { id: 3, name: 'Recommendations', icon: '💡' },
+    { id: 1, name: "Case Summary", icon: "📄" },
+    { id: 2, name: "Legal Implications", icon: "⚖️" },
+    { id: 3, name: "Recommendations", icon: "💡" },
   ];
 
   const handleFileUpload = (e) => {
@@ -29,38 +29,38 @@ export default function LegalAnalysisTabs() {
           {
             confidence_score: 0.99,
             description:
-              'Possible legal concern detected: lack of informed consent.',
-            issue: 'lack of informed consent',
-            relevant_law: 'Indian Medical Council Regulations',
+              "Possible legal concern detected: lack of informed consent.",
+            issue: "lack of informed consent",
+            relevant_law: "Indian Medical Council Regulations",
             statute_quote:
-              'Every physician shall obtain informed consent from the patient before any medical procedure…',
+              "Every physician shall obtain informed consent from the patient before any medical procedure…",
           },
           {
             confidence_score: 0.98,
-            description: 'Possible legal concern detected: delayed treatment.',
-            issue: 'delayed treatment',
+            description: "Possible legal concern detected: delayed treatment.",
+            issue: "delayed treatment",
             relevant_law:
-              'Indian Medical Council Regulations / Consumer Protection Act',
+              "Indian Medical Council Regulations / Consumer Protection Act",
             statute_quote:
-              'Every physician shall act with reasonable skill and knowledge, and any delay causing harm may be subject to legal action.',
+              "Every physician shall act with reasonable skill and knowledge, and any delay causing harm may be subject to legal action.",
           },
           {
             confidence_score: 0.97,
-            description: 'Possible legal concern detected: medical negligence.',
-            issue: 'medical negligence',
-            relevant_law: 'Indian Penal Code',
+            description: "Possible legal concern detected: medical negligence.",
+            issue: "medical negligence",
+            relevant_law: "Indian Penal Code",
             statute_quote:
-              'Whoever causes death or injury by negligence shall be punished with imprisonment…',
+              "Whoever causes death or injury by negligence shall be punished with imprisonment…",
           },
         ],
         recommendations: [
-          'Document all clinical decisions, diagnostic findings, and surgical procedures.',
-          'Ensure all consent forms are signed and documented.',
-          'Ensure rapid trauma transfer protocols and clear handover procedures.',
-          'Implement regular training in trauma management and consent procedures.',
+          "Document all clinical decisions, diagnostic findings, and surgical procedures.",
+          "Ensure all consent forms are signed and documented.",
+          "Ensure rapid trauma transfer protocols and clear handover procedures.",
+          "Implement regular training in trauma management and consent procedures.",
         ],
         summary:
-          'The patient underwent an appendectomy at City Hospital. The consent form was signed but the risks associated with the surgery were not properly explained. The patient stated that they were not informed about potential complications such as infection or bleeding.',
+          "The patient underwent an appendectomy at City Hospital. The consent form was signed but the risks associated with the surgery were not properly explained. The patient stated that they were not informed about potential complications such as infection or bleeding.",
       };
       setResults(mockData);
       setLoading(false);
@@ -85,7 +85,7 @@ export default function LegalAnalysisTabs() {
       return results.legal_implications.map((item, idx) => (
         <div
           key={idx}
-          className="p-4 mb-4 bg-gray-900 border border-gray-700 rounded-xl shadow-lg"
+          className="p-4 mb-4 bg-gray-900 border border-gray-800 rounded-xl shadow-lg"
         >
           <p className="text-indigo-400 font-semibold">{item.description}</p>
           <p className="text-gray-400 text-sm">
@@ -108,7 +108,7 @@ export default function LegalAnalysisTabs() {
   };
 
   return (
-    <div className="p-6 min-h-[32rem] bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100 font-sans">
+    <div className="p-6 min-h-[32rem] bg-gradient-to-br from-gray-900 to-gray-1000 text-gray-100 font-sans">
       <h2 className="text-3xl font-bold mb-6 text-indigo-400">
         Legal Case Analysis
       </h2>
@@ -122,7 +122,7 @@ export default function LegalAnalysisTabs() {
           >
             <Upload className="w-10 h-10 text-indigo-500 mb-2" />
             <span className="text-gray-200 font-medium">
-              {file?.name || 'Upload PDF or DOC file'}
+              {file?.name || "Upload PDF or DOC file"}
             </span>
             <input
               id="fileUpload"
@@ -153,8 +153,8 @@ export default function LegalAnalysisTabs() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`relative group flex items-center gap-3 px-4 py-3 mb-2 rounded-lg font-medium transition-all ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                    ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg"
+                    : "text-gray-400 hover:text-white hover:bg-gray-800"
                 }`}
               >
                 <span className="text-xl">{tab.icon}</span>

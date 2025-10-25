@@ -27,10 +27,15 @@ export default function Signup() {
       navigate("/signin");
     } catch (err) {
       // console.error(err);
-
-      toast.error("Signup Failed.Please try again", {
-        position: "top-center",
-      });
+      if (err.response && err.response.status === 400) {
+        toast.error(err.response.data.detail || "User already exists", {
+          position: "top-center",
+        });
+      } else {
+        toast.error("Signup failed. Please try again", {
+          position: "top-center",
+        });
+      }
     }
   };
 

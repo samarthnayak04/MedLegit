@@ -71,13 +71,13 @@ const Bubbles = ({
   );
 };
 
-// ParticleText Component
+// ParticleText Component (responsive font sizes)
 const ParticleText = ({ text = "MedLegit" }) => (
   <motion.h2
     initial={{ opacity: 0, scale: 0.8 }}
     animate={{ opacity: 1, scale: 1 }}
     transition={{ duration: 0.5, ease: "easeOut" }}
-    className="text-[7rem] md:text-[10rem] font-extrabold uppercase text-transparent bg-clip-text relative z-10 text-center"
+    className="text-[3rem] sm:text-[5rem] md:text-[7rem] lg:text-[10rem] font-extrabold uppercase text-transparent bg-clip-text relative z-10 text-center leading-tight px-2"
     style={{
       backgroundImage:
         "url(https://images.unsplash.com/photo-1501630834273-4b5604d2ee31?q=80&w=2070&auto=format&fit=crop)",
@@ -91,7 +91,6 @@ const ParticleText = ({ text = "MedLegit" }) => (
   </motion.h2>
 );
 
-// DecryptingText Component (faster)
 const CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 const DecryptingText = ({ targetText, speed = 3 }) => {
@@ -119,7 +118,7 @@ const DecryptingText = ({ targetText, speed = 3 }) => {
       setCurrentText(newText);
 
       if (iteration < targetText.length) {
-        iteration += speed; // ⏩ faster reveal
+        iteration += speed;
         animationFrameId = requestAnimationFrame(scramble);
       } else {
         setCurrentText(targetText);
@@ -136,7 +135,7 @@ const DecryptingText = ({ targetText, speed = 3 }) => {
 
   return (
     <motion.p
-      className="text-xl md:text-2xl text-center z-10 text-gray-200"
+      className="text-base sm:text-lg md:text-2xl text-center z-10 text-gray-200 px-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
@@ -146,7 +145,6 @@ const DecryptingText = ({ targetText, speed = 3 }) => {
   );
 };
 
-// ShimmerButton Component (cursor pointer fix)
 const ShimmerButton = ({ onClick, text }) => {
   const customCss = `
     @property --angle {
@@ -163,9 +161,7 @@ const ShimmerButton = ({ onClick, text }) => {
       <style>{customCss}</style>
       <button
         onClick={onClick}
-        className="relative inline-flex items-center justify-center p-[1.5px] 
-                   bg-gray-300 dark:bg-black rounded-full overflow-hidden 
-                   group cursor-pointer"
+        className="relative inline-flex items-center justify-center p-[1.5px] bg-gray-300 dark:bg-black rounded-full overflow-hidden group cursor-pointer w-[160px] sm:w-auto"
       >
         <div
           className="absolute inset-0"
@@ -175,12 +171,7 @@ const ShimmerButton = ({ onClick, text }) => {
             animation: "shimmer-spin 2.5s linear infinite",
           }}
         />
-        <span
-          className="relative z-10 inline-flex items-center justify-center w-full h-full 
-                         px-8 py-3 text-gray-900 dark:text-white bg-white dark:bg-gray-900 
-                         rounded-full group-hover:bg-gray-100 dark:group-hover:bg-gray-800 
-                         transition-colors duration-300"
-        >
+        <span className="relative z-10 inline-flex items-center justify-center w-full h-full px-6 sm:px-8 py-3 text-gray-900 dark:text-white bg-white dark:bg-gray-900 rounded-full group-hover:bg-gray-100 dark:group-hover:bg-gray-800 transition-colors duration-300 text-sm sm:text-base">
           {text}
         </span>
       </button>
@@ -188,24 +179,23 @@ const ShimmerButton = ({ onClick, text }) => {
   );
 };
 
-// LandingPage Component
 export default function LandingPage() {
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
 
   return (
     <>
-      <div className="w-full h-screen relative overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 font-sans">
-        <Bubbles /> {/* Floating Bubbles */}
-        {/* Navbar */}
+      <div className="w-full min-h-screen relative overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 font-sans">
+        <Bubbles />
         <div className="top-0 left-0 w-full z-50">
           <Navbar />
         </div>
-        {/* Main Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-white z-10">
+
+        {/* Centered Main Content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 sm:px-6 text-white z-10 text-center">
           <ParticleText />
 
-          <div className="mt-4 space-y-2">
+          <div className="mt-4 space-y-2 max-w-xl">
             <DecryptingText
               targetText="Your trusted AI platform for healthcare fraud detection, accurate diagnostics, and legal insights."
               speed={3}
@@ -213,83 +203,73 @@ export default function LandingPage() {
             <DecryptingText targetText="Fast. Reliable. Legit." speed={3} />
           </div>
 
-          <div className="mt-6">
+          <div className="mt-8">
             <ShimmerButton
               onClick={() => setShowPopup(true)}
               text="Get Started"
             />
           </div>
         </div>
-        {/* Popup */}
+
+        {/* Responsive Popup */}
         {showPopup && (
           <div
-            className="fixed inset-0 flex items-center justify-center z-50 bg-black/60"
-            onClick={() => setShowPopup(false)} // close on backdrop click
+            className="fixed inset-0 flex items-center justify-center z-50 bg-black/60 px-4 overflow-y-auto"
+            onClick={() => setShowPopup(false)}
           >
             <motion.div
-              onClick={(e) => e.stopPropagation()} // prevent close inside
+              onClick={(e) => e.stopPropagation()}
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="w-full max-w-md mx-auto 
-                       [background:linear-gradient(45deg,#080b11,theme(colors.slate.800)_50%,#172033)_padding-box,
-                       conic-gradient(from_var(--border-angle),theme(colors.slate.600/.48)_80%,theme(colors.teal.500)_86%,
-                       theme(colors.cyan.300)_90%,theme(colors.teal.500)_94%,theme(colors.slate.600/.48))_border-box] 
-                       rounded-2xl border border-transparent animate-border"
+              className="w-full max-w-md mx-auto my-8 rounded-2xl border border-transparent animate-border overflow-hidden"
             >
-              {/* Inner Popup Content */}
-              <div className="relative text-left z-10 px-8 py-10 rounded-2xl w-full bg-white dark:bg-black shadow-2xl ring-1 ring-cyan-400/40">
-                {/* Close Button */}
+              <div className="relative text-left z-10 px-6 sm:px-8 py-8 sm:py-10 rounded-2xl w-full bg-white dark:bg-black shadow-2xl ring-1 ring-cyan-400/40">
                 <button
-                  className="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold"
+                  className="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl font-bold"
                   onClick={() => setShowPopup(false)}
                 >
                   &times;
                 </button>
 
-                {/* MedLegit Logo */}
-                <div className="absolute top-4 left-6 text-2xl font-extrabold text-cyan-400">
+                <div className="absolute top-4 left-6 text-xl sm:text-2xl font-extrabold text-cyan-400">
                   MedLegit
                 </div>
 
-                {/* Popup Content */}
-                <div className="mt-10 space-y-3 text-gray-700 dark:text-gray-200">
+                <div className="mt-10 space-y-3 text-sm sm:text-base text-gray-700 dark:text-gray-200 leading-relaxed">
                   <p>
                     We provide{" "}
                     <span className="text-cyan-400 font-semibold">
                       AI-assisted medical diagnostics, fraud detection
-                    </span>
-                    , and NLP-based{" "}
+                    </span>{" "}
+                    and{" "}
                     <span className="text-cyan-400 font-semibold">
                       legal risk analysis
                     </span>{" "}
-                    to streamline your workflow.
+                    for professionals.
                   </p>
                   <p>
                     Our platform ensures{" "}
                     <span className="text-cyan-400 font-semibold">
-                      data security, accuracy
+                      data security and accuracy
                     </span>
-                    , and actionable insights for healthcare and legal
-                    professionals.
+                    , with actionable insights.
                   </p>
                   <p>
-                    Join users who trust MedLegit to make informed decisions
-                    faster and more reliably.
+                    Join users who trust MedLegit to make decisions faster and
+                    more reliably.
                   </p>
                 </div>
 
-                {/* Sign Up Button */}
-                <div className="mt-6 flex justify-center space-x-4">
+                <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3 sm:space-x-4">
                   <ShimmerButton
                     onClick={() => navigate("/signup")}
                     text="Sign Up"
                   />
-
                   <button
                     onClick={() => navigate("/signin")}
-                    className="px-8 py-3 rounded-full text-cyan-400 border border-cyan-400 hover:bg-cyan-400 hover:text-black transition-all"
+                    className="px-8 py-3 rounded-full text-cyan-400 border border-cyan-400 hover:bg-cyan-400 hover:text-black transition-all text-sm sm:text-base"
                   >
                     Sign In
                   </button>
