@@ -36,7 +36,7 @@ class DashboardActivity(BaseModel):
     status: str
 
     class Config:
-        orm_mode = True
+        from_attributes= True
 
 
 class UserDashboardOut(BaseModel):
@@ -47,7 +47,7 @@ class UserDashboardOut(BaseModel):
     recent_activity: List[DashboardActivity]
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class Token(BaseModel):
     access_token: str

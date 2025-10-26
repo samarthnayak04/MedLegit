@@ -9,7 +9,7 @@ class PneumoniaModel:
     def __init__(self, model_path: str):
         # Directly load the full saved model (.keras or .h5)
         self.model = load_model(model_path, compile=False)
-        print(f"Model loaded successfully from {model_path}")
+        # print(f"Model loaded successfully from {model_path}")
 
     def preprocess(self, img_bytes: bytes):
         img = Image.open(io.BytesIO(img_bytes)).convert("RGB")
