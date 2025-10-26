@@ -3,7 +3,7 @@ import axios from "axios";
 // ✅ Base URL now comes from environment variable
 // Add this line in your .env file:
 // REACT_APP_API_URL=http://localhost:8000/api
-const BASE_URL = process.env.REACT_APP_API_URL;
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
   baseURL: BASE_URL,
