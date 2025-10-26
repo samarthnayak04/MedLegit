@@ -1,25 +1,19 @@
-"""change pneumonia_cases.id from UUID to Integer
-
-Revision ID: 1a8ffcd9aa57
-Revises: 35ea4a962445
-Create Date: 2025-10-01 19:54:50.312783
-"""
 from typing import Sequence, Union
-
 from alembic import op
 import sqlalchemy as sa
 
-# revision identifiers, used by Alembic.
-revision: str = "1a8ffcd9aa57"
-down_revision: Union[str, None] = "35ea4a962445"
+revision: str = '1a8ffcd9aa57'
+down_revision: Union[str, None] = '35ea4a962445'  # this should match the previous migration ID
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    # Drop the old table if it exists (UUID id)
+    # 1. DROP THE EXISTING TABLE (THIS WILL LOSE ALL DATA!)
+    #    This is necessary because you are changing the ID type and autoincrement behavior.
+    op.drop_table("pneumonia_cases")
     
-    # Recreate with Integer primary key
+    # 2. Recreate with Integer primary key
     op.create_table(
         "pneumonia_cases",
         sa.Column("id", sa.Integer, primary_key=True, autoincrement=True),

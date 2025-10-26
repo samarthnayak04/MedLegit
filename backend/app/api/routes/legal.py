@@ -53,7 +53,7 @@
 #         return {
 #             "message": "Legal case analyzed and saved successfully",
 #             "case_id": legal_case.id,
-#             "summary": result.get("summary"),
+#             
 #             "legal_issues": result.get("legal_issues"),
 #             "relevant_laws": result.get("relevant_laws"),
 #             "recommendations": result.get("recommendations")

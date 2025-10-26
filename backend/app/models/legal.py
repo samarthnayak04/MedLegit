@@ -9,7 +9,7 @@
 #     id = Column(Integer, primary_key=True, autoincrement=True)
 #     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 #     case_text = Column(Text, nullable=False)
-#     summary = Column(Text, nullable=False)
+#     
 #     legal_issues = Column(JSON, nullable=False)
 #     relevant_laws = Column(JSON, nullable=False)
 #     recommendations = Column(JSON, nullable=True)

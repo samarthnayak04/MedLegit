@@ -7,7 +7,7 @@
 #     db: Session,
 #     user_id: int,
 #     case_text: str,
-#     summary: str,
+#     
 #     legal_issues: list,
 #     relevant_laws: list,
 #     recommendations: list = None
@@ -15,7 +15,7 @@
 #     case = LegalCase(
 #         user_id=user_id,
 #         case_text=case_text,
-#         summary=summary,
+#         
 #         legal_issues=legal_issues,
 #         relevant_laws=relevant_laws,
 #         recommendations=recommendations or []

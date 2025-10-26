@@ -4,7 +4,7 @@
 # class LegalCaseOut(BaseModel):
 #     id: int
 #     user_id: int
-#     summary: str
+#     
 #     legal_issues: List[str]
 #     relevant_laws: List[str]
 #     recommendations: Optional[List[str]] = []
