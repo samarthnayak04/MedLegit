@@ -17,4 +17,5 @@ class User(Base):
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
     fraud_cases = relationship("FraudCase", back_populates="user")
     pneumonia_cases = relationship("PneumoniaCase", back_populates="user")
-    # legal_cases = relationship("LegalCase", back_populates="user", cascade="all, delete-orphan")
+    legal_cases = relationship("LegalCase", back_populates="user", cascade="all, delete")
+

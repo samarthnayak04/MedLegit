@@ -4,7 +4,7 @@ from datetime import datetime
 
 from app.schemas.fraud import FraudCaseOut
 from app.schemas.health import PneumoniaCaseOut
-# from app.schemas.legal import LegalCaseOut
+from app.schemas.legal import LegalAnalysisOut
 
 class UserBase(BaseModel):
     id: int

@@ -1,78 +1,115 @@
-# import json, os
-# from pathlib import Path
-# from transformers import pipeline
-# from sentence_transformers import SentenceTransformer, util
-# import torch
+# modules/legal_agent.py
 
-# # Load summarizer + QA + sentence transformer
-# summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
-# qa_model = pipeline("question-answering", model="deepset/bert-base-cased-squad2")
-# sbert = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+from transformers import pipeline
 
-# # Load statutes & precedents
-# DATA_DIR = Path(__file__).resolve().parent.parent / "data"
-# with open(DATA_DIR / "statutes.json", "r") as f:
-#     STATUTES = json.load(f)
-# with open(DATA_DIR / "precedents.json", "r") as f:
-#     PRECEDENTS = json.load(f)
+# -----------------------------
+# Load the zero-shot model once
+# -----------------------------
+print("🚀 Loading zero-shot classification model...")
+classifier = pipeline(
+    "zero-shot-classification",
+    model="facebook/bart-large-mnli",
+    device=-1  # Use 0 if you have a GPU
+)
+print("✅ Model loaded successfully.")
 
 
-# class LegalAgent:
-#     def __init__(self):
-#         print("✅ Legal agent initialized.")
+# -----------------------------
+# Legal Knowledge Base
+# -----------------------------
+LEGAL_ISSUES = {
+    "lack of informed consent": {
+        "law": "Indian Medical Council Regulations",
+        "statute_quote": "Every physician shall obtain informed consent from the patient before any medical procedure."
+    },
+    "delayed treatment": {
+        "law": "Consumer Protection Act / IMC Regulations",
+        "statute_quote": "Every physician shall act with reasonable skill and knowledge, and any delay causing harm may be subject to legal action."
+    },
+    "documentation lapse": {
+        "law": "Indian Medical Council Regulations",
+        "statute_quote": "All medical procedures and decisions must be documented in the patient's records to ensure transparency."
+    },
+    "medical negligence": {
+        "law": "Indian Penal Code (Section 304A)",
+        "statute_quote": "Whoever causes death or injury by negligence shall be punished with imprisonment or fine."
+    },
+}
 
-#     def extract_clauses(self, text):
-#         questions = [
-#             "What are the key legal issues in this case?",
-#             "What are the liabilities mentioned?",
-#             "What is the outcome or judgment?"
-#         ]
-#         answers = []
-#         for q in questions:
-#             try:
-#                 res = qa_model(question=q, context=text)
-#                 if res and res.get("answer"):
-#                     answers.append(res["answer"])
-#             except Exception:
-#                 continue
-#         return answers
-
-#     def summarize(self, text):
-#         try:
-#             return summarizer(text[:4000], max_length=180, min_length=50, do_sample=False)[0]["summary_text"]
-#         except Exception:
-#             return text[:500]
-
-#     def match_precedents(self, summary):
-#         query_emb = sbert.encode(summary, convert_to_tensor=True)
-#         scores = []
-#         for p in PRECEDENTS:
-#             case_emb = sbert.encode(p["summary"], convert_to_tensor=True)
-#             sim = util.pytorch_cos_sim(query_emb, case_emb).item()
-#             scores.append((p, sim))
-#         scores.sort(key=lambda x: x[1], reverse=True)
-#         return [s[0] for s in scores[:3]]
-
-#     def find_laws(self, summary):
-#         hits = []
-#         for s in STATUTES:
-            
-#             if any(word.lower() in summary.lower() for word in s["title"].split()):
-#                 hits.append(s)
-#         return hits[:3]
-
-#     def analyze(self, text: str):
-#         summary = self.summarize(text)
-#         clauses = self.extract_clauses(text)
-#         precedents = self.match_precedents(summary)
-#         laws = self.find_laws(summary)
-#         return {
-#             "summary": summary,
-#             "legal_issues": clauses,
-#             "relevant_laws": [l["section"] for l in laws],
-#             "similar_cases": [p["case"] for p in precedents],
-#             "recommendations": ["Review top similar cases", "Consult applicable IPC sections"]
-#         }
+LEGAL_LABELS = list(LEGAL_ISSUES.keys())
 
 
-# legal_agent = LegalAgent()
+# -----------------------------
+# Core Analysis Function
+# -----------------------------
+def analyze_legal(text: str, confidence_threshold: float = 0.6):
+    """
+    Analyze a medical/legal text and detect possible legal implications.
+
+    Returns:
+        dict: {
+            "legal_implications": [ {issue, confidence_score, relevant_law, statute_quote}, ... ],
+            "recommendations": [str, ...],
+            "message": str (optional)
+        }
+    """
+    # Basic input validation
+    if not text or not text.strip():
+        return {
+            "legal_implications": [],
+            "recommendations": [],
+            "message": "No valid text provided for analysis."
+        }
+
+    try:
+        # Run classification
+        classification = classifier(
+            text,
+            candidate_labels=LEGAL_LABELS,
+            multi_label=True
+        )
+    except Exception as e:
+        return {
+            "legal_implications": [],
+            "recommendations": [],
+            "message": f"Error during model inference: {str(e)}"
+        }
+
+    # Extract high-confidence results
+    legal_implications = []
+    for label, score in zip(classification.get("labels", []), classification.get("scores", [])):
+        if score >= confidence_threshold:
+            legal_implications.append({
+                "issue": label,
+                "confidence_score": round(float(score), 2),
+                "relevant_law": LEGAL_ISSUES[label]["law"],
+                "statute_quote": LEGAL_ISSUES[label]["statute_quote"]
+            })
+
+    # No implications found
+    if not legal_implications:
+        return {
+            "legal_implications": ["No significant legal implications detected."],
+            "recommendations": ["No Recommendations"],
+            "message": "No legal implications."
+        }
+
+    # Generate actionable recommendations
+    recommendations = []
+    for item in legal_implications:
+        issue = item["issue"]
+        if issue == "lack of informed consent":
+            recommendations.append("Ensure all consent forms are properly signed and stored.")
+        elif issue == "delayed treatment":
+            recommendations.append("Improve triage and emergency response protocols.")
+        elif issue == "documentation lapse":
+            recommendations.append("Maintain detailed and accurate medical documentation.")
+        elif issue == "medical negligence":
+            recommendations.append("Train staff on standard of care and procedural compliance.")
+
+    # Remove duplicates and finalize
+    return {
+        "legal_implications": legal_implications,
+        "recommendations": sorted(list(set(recommendations))),
+        "message": "Analysis completed successfully."
+    }

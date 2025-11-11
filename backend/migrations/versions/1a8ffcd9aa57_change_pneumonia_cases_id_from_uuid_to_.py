@@ -4,21 +4,20 @@ Revision ID: 1a8ffcd9aa57
 Revises: 35ea4a962445
 Create Date: 2025-10-01 19:54:50.312783
 """
-from typing import Sequence, Union
-
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = "1a8ffcd9aa57"
-down_revision: Union[str, None] = "35ea4a962445"
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
-
+revision = "1a8ffcd9aa57"
+down_revision = "35ea4a962445"
+branch_labels = None
+depends_on = None
 
 def upgrade() -> None:
-    # Drop the old table if it exists (UUID id)
-    
+    # Drop the old table if it exists (safely)
+    op.drop_table("pneumonia_cases", if_exists=True)
+
     # Recreate with Integer primary key
     op.create_table(
         "pneumonia_cases",
@@ -33,14 +32,11 @@ def upgrade() -> None:
         ),
     )
 
-
 def downgrade() -> None:
-    # Drop int version
+    # Drop integer version
     op.drop_table("pneumonia_cases")
 
     # Recreate with UUID primary key
-    from sqlalchemy.dialects import postgresql
-
     op.create_table(
         "pneumonia_cases",
         sa.Column("id", postgresql.UUID(as_uuid=True), primary_key=True),

@@ -1,63 +1,90 @@
-# from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
-# from sqlalchemy.orm import Session
-# from app.core.security import get_current_user
-# from app.core.db import get_db
-# from app.ml import legal_agent
-# from app.crud import legal_crud
-# from app.models.user import User
-# import os
-# import textract
+from fastapi import APIRouter, UploadFile, File, Form, Depends, HTTPException
+from fastapi.responses import JSONResponse
+from sqlalchemy.orm import Session
+import json
+import docx2txt
+import PyPDF2
+from io import BytesIO
 
-# router = APIRouter()
+from app.core.db import get_db
+from app.crud import legal as crud_legal
+from app.ml import legal_agent
+from app.api.dependencies import get_current_user  # your auth dependency
 
-# UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
-# os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+router = APIRouter()
 
-# ALLOWED_EXTENSIONS = {"pdf", "docx", "txt"}
+# ------------------------
+# Text extraction utilities
+# ------------------------
+def extract_text_from_file(uploaded_file: UploadFile):
+    filename = uploaded_file.filename.lower()
 
-# def allowed_file(filename: str):
-#     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    if filename.endswith(".docx"):
+        text_data = docx2txt.process(uploaded_file.file)
+        return text_data
+
+    elif filename.endswith(".pdf"):
+        text_data = ""
+        try:
+            pdf_reader = PyPDF2.PdfReader(BytesIO(uploaded_file.file.read()))
+            for page in pdf_reader.pages:
+                text_data += page.extract_text() or ""
+            return text_data
+        except Exception:
+            raise HTTPException(status_code=400, detail="Unable to read PDF file")
+
+    else:
+        raise HTTPException(status_code=400, detail="Unsupported file format. Use PDF or DOCX.")
 
 
-# @router.post("/legal/analyze")
-# async def analyze_legal_case(
-#     file: UploadFile = File(...),
-#     db: Session = Depends(get_db),
-#     current_user: User = Depends(get_current_user)
-# ):
-#     """
-#     Uploads a legal document (PDF/DOCX/TXT),
-#     analyzes it using AI, and saves the result in the DB.
-#     """
-#     try:
-#         # ✅ Validate file type
-#         if not allowed_file(file.filename):
-#             raise HTTPException(status_code=400, detail="Unsupported file format")
+# ------------------------
+# Main analysis endpoint
+# ------------------------
+@router.post("/analyze")
+async def analyze_legal_endpoint(
+    text_input: str = Form(None),
+    file: UploadFile = File(None),
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)  # ensures authentication
+):
+    """
+    Analyze either raw text or uploaded document for legal implications.
+    Only authenticated users can run this.
+    """
 
-#         # ✅ Save uploaded file
-#         file_path = os.path.join(UPLOAD_FOLDER, file.filename)
-#         with open(file_path, "wb") as f:
-#             f.write(await file.read())
+    # Validate input
+    if not text_input and not file:
+        raise HTTPException(status_code=400, detail="Please provide either text or a document.")
 
-#         # ✅ Extract text from document
-#         try:
-#             text = textract.process(file_path).decode("utf-8")
-#         except Exception:
-#             raise HTTPException(status_code=500, detail="Failed to extract text from file")
+    # Extract text from file if provided
+    if file:
+        extracted_text = extract_text_from_file(file)
+        text_to_analyze = extracted_text.strip()
+    else:
+        text_to_analyze = text_input.strip()
 
-#         # ✅ Run AI legal analysis
-#         result = legal_agent.analyze(text)
+    if not text_to_analyze:
+        raise HTTPException(status_code=400, detail="No valid text found for analysis.")
 
-#         
+    # Run ML legal analysis
+    result = legal_agent.analyze_legal(text_to_analyze)
+    result_str = json.dumps(result)
 
-#         return {
-#             "message": "Legal case analyzed and saved successfully",
-#             "case_id": legal_case.id,
-#             "summary": result.get("summary"),
-#             "legal_issues": result.get("legal_issues"),
-#             "relevant_laws": result.get("relevant_laws"),
-#             "recommendations": result.get("recommendations")
-#         }
+    # Use current authenticated user's ID
+    user_id = current_user.id
 
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+    # Save to DB
+    db_obj = crud_legal.create_legal_case(
+        db=db,
+        user_id=user_id,
+        input_text=text_to_analyze,
+        legal_issues=json.dumps(result.get("legal_implications", [])),
+        relevant_laws=json.dumps(result.get("relevant_laws", [])),
+        result_json=result_str
+    )
+
+    return JSONResponse({
+        "user_id": db_obj.user_id,
+        "input_text": db_obj.input_text[:300] + ("..." if len(db_obj.input_text) > 300 else ""),
+        "analysis": result
+    })
