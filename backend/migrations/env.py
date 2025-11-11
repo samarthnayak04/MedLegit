@@ -4,7 +4,8 @@ import pathlib
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 from alembic import context
-
+from dotenv import load_dotenv
+load_dotenv() 
 # --- Fix the syntax error by separating the imports ---
 import app.models # Package import
 from app.core.db import Base # Class import
@@ -23,6 +24,9 @@ sys.path.insert(0, str(BASE_DIR))
 
 # --- Alembic Config ---
 config = context.config
+database_url = os.getenv("DATABASE_URL")
+if database_url:
+    config.set_main_option("sqlalchemy.url", database_url)
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 

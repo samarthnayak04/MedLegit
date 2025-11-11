@@ -1,3 +1,8 @@
+
+from dotenv import load_dotenv
+load_dotenv()
+import warnings
+warnings.filterwarnings("ignore", message=".*pkg_resources.*")
 from fastapi import FastAPI
 from app.api.routes import auth,user,fraud,health, legal
 from fastapi.middleware.cors import CORSMiddleware

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, ForeignKey
+from sqlalchemy import Column, Integer, Text, ForeignKey, TIMESTAMP, func
 from sqlalchemy.orm import relationship
 from app.core.db import Base
 
@@ -11,5 +11,6 @@ class LegalCase(Base):
     legal_issues = Column(Text)
     relevant_laws = Column(Text)
     result_json = Column(Text)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
 
     user = relationship("User", back_populates="legal_cases")

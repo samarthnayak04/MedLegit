@@ -4,15 +4,18 @@ Revision ID: 1a8ffcd9aa57
 Revises: 35ea4a962445
 Create Date: 2025-10-01 19:54:50.312783
 """
+
+from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = "1a8ffcd9aa57"
-down_revision = "35ea4a962445"
-branch_labels = None
-depends_on = None
+revision: str = "1a8ffcd9aa57"
+down_revision: Union[str, None] = "35ea4a962445"
+branch_labels: Union[str, Sequence[str], None] = None
+depends_on: Union[str, Sequence[str], None] = None
+
 
 def upgrade() -> None:
     # Drop the old table if it exists (safely)
@@ -31,6 +34,7 @@ def upgrade() -> None:
             server_default=sa.func.now(),
         ),
     )
+
 
 def downgrade() -> None:
     # Drop integer version

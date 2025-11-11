@@ -70,8 +70,19 @@ async def analyze_legal_endpoint(
     result = legal_agent.analyze_legal(text_to_analyze)
     result_str = json.dumps(result)
 
+
     # Use current authenticated user's ID
     user_id = current_user.id
+
+#         return {
+#             "message": "Legal case analyzed and saved successfully",
+#             "case_id": legal_case.id,
+#             
+#             "legal_issues": result.get("legal_issues"),
+#             "relevant_laws": result.get("relevant_laws"),
+#             "recommendations": result.get("recommendations")
+#         }
+
 
     # Save to DB
     db_obj = crud_legal.create_legal_case(
