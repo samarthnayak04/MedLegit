@@ -21,7 +21,7 @@ export default function FraudDetection() {
     formData.append("file", file);
 
     try {
-      const res = await api.post("/fraud/upload", formData, {
+      const res = await api.post("/fraud/insurance-claims", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
