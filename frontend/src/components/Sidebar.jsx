@@ -197,7 +197,7 @@ export default function Sidebar() {
             <button
               className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg 
                 text-red-500 hover:text-white hover:bg-red-600/20
-                transition-all duration-200 ${
+                transition-all duration-200 cursor-pointer${
                   !isExpanded ? "justify-center" : ""
                 }`}
               onClick={async () => {
