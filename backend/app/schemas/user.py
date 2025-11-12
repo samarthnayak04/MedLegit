@@ -43,7 +43,7 @@ class UserDashboardOut(BaseModel):
     user: UserOut
     fraud_cases: int
     medical_reports: int
-    # legal_cases: int
+    legal_cases: int
     recent_activity: List[DashboardActivity]
     
     class Config:
