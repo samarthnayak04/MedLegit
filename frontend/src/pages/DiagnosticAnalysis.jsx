@@ -20,7 +20,7 @@ export default function DiagnosticAnalysis() {
     formData.append("file", file);
 
     try {
-      const res = await api.post("/health/pneumonia", formData, {
+      const res = await api.post("/health/pneumonia-detection", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setResult(res.data);
