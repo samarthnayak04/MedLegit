@@ -14,7 +14,7 @@ from app.ml.pneumonia_model import pneumonia_model
 
 router = APIRouter()
 
-@router.post("/pneumonia", response_model=PneumoniaCaseOut)
+@router.post("/pneumonia-detection", response_model=PneumoniaCaseOut)
 async def predict_pneumonia(
     file: UploadFile = File(...),
     db: Session = Depends(get_db), # 👈 RE-ENABLED DB CONNECTION

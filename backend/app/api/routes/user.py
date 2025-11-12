@@ -3,11 +3,11 @@ from app.schemas import user as user_schema
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.core.db import get_db
-from app.api.dependencies import get_current_user
+from app.api.dependencies import get_current_user, verify_admin
 from app.models.user import User
 from app.models.fraud import FraudCase
 from app.models.health import PneumoniaCase
-# from app.models.legal import LegalCase
+from app.models.legal import LegalCase
 from app.schemas.user import UserDashboardOut, DashboardActivity,UserOut
 from datetime import datetime,timezone
 router = APIRouter()
@@ -19,7 +19,7 @@ def get_profile(current_user: User = Depends(get_current_user)):
 
 # 3. Get all users (admin purpose)
 @router.get("/all", response_model=list[user_schema.UserOut])
-def get_all_users(db: Session = Depends(get_db)):
+def get_all_users(db: Session = Depends(get_db), current_user: User = Depends(verify_admin)):
     return db.query(User).all()
 
 @router.get("/dashboard", response_model=UserDashboardOut)
@@ -30,12 +30,12 @@ async def get_dashboard(current_user: User = Depends(get_current_user), db: Sess
     # Fetch all user-specific records
     fraud_cases = db.query(FraudCase).filter(FraudCase.user_id == current_user.id).all()
     medical_cases = db.query(PneumoniaCase).filter(PneumoniaCase.user_id == current_user.id).all()
-    # legal_cases = db.query(LegalCase).filter(LegalCase.user_id == current_user.id).all()
+    legal_cases = db.query(LegalCase).filter(LegalCase.user_id == current_user.id).all()
 
     # --- Summary Counts ---
     fraud_count = len(fraud_cases)
     medical_count = len(medical_cases)
-    # legal_count = len(legal_cases)
+    legal_count = len(legal_cases)
 
     # --- Build Activities ---
     activities = []
@@ -58,12 +58,13 @@ async def get_dashboard(current_user: User = Depends(get_current_user), db: Sess
             status=status
         ))
 
-    # for lc in legal_cases:
-    #     activities.append(DashboardActivity(
-    #         date=lc.created_at,
-    #         activity="Legal case analysis run",
-    #         status="Report Ready"
-    #     ))
+    for lc in legal_cases:
+        status = f"{lc.top_issue} ({lc.confidence_score*100:.1f}% confident)"
+        activities.append(DashboardActivity(
+            date=lc.created_at,
+            activity="Legal case analysis",
+            status=status
+        ))
 
     # Sort newest first
     activities.sort(key=lambda x: x.date, reverse=True)
@@ -75,7 +76,7 @@ async def get_dashboard(current_user: User = Depends(get_current_user), db: Sess
         user=UserOut.from_orm(current_user),
         fraud_cases=fraud_count,
         medical_reports=medical_count,
-        # legal_cases=legal_count,
+        legal_cases=legal_count,
         recent_activity=recent_activity,
      
     )
@@ -86,6 +87,7 @@ def get_all_activities(current_user: User = Depends(get_current_user), db: Sessi
 
     fraud_cases = db.query(FraudCase).filter(FraudCase.user_id == current_user.id).all()
     medical_cases = db.query(PneumoniaCase).filter(PneumoniaCase.user_id == current_user.id).all()
+    legal_cases = db.query(LegalCase).filter(LegalCase.user_id == current_user.id).all()
 
     for fc in fraud_cases:
         activities.append(DashboardActivity(
@@ -103,12 +105,13 @@ def get_all_activities(current_user: User = Depends(get_current_user), db: Sessi
             activity="Pneumonia detection via X-ray",
             status=status
         ))
-         # for lc in legal_cases:
-    #     activities.append(DashboardActivity(
-    #         date=lc.created_at,
-    #         activity="Legal case analysis run",
-    #         status="Report Ready"
-    #     ))
+    for lc in legal_cases:
+        status = f"Top issue: {lc.top_issue} ({lc.confidence_score*100:.1f}% conf.)"
+        activities.append(DashboardActivity(
+            date=lc.created_at,
+            activity="Legal case analysis",
+            status=status
+        ))
 
     activities.sort(key=lambda x: x.date, reverse=True)
     return activities

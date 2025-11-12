@@ -1,101 +1,95 @@
-from fastapi import APIRouter, UploadFile, File, Form, Depends, HTTPException
+# app/api/routes/legal.py
+from fastapi import APIRouter, UploadFile, File, Depends, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 import json
-import docx2txt
-import PyPDF2
-from io import BytesIO
+from typing import Any
 
 from app.core.db import get_db
 from app.crud import legal as crud_legal
 from app.ml import legal_agent
-from app.api.dependencies import get_current_user  # your auth dependency
+from app.api.dependencies import get_current_user
 
 router = APIRouter()
 
-# ------------------------
-# Text extraction utilities
-# ------------------------
-def extract_text_from_file(uploaded_file: UploadFile):
-    filename = uploaded_file.filename.lower()
 
-    if filename.endswith(".docx"):
-        text_data = docx2txt.process(uploaded_file.file)
-        return text_data
-
-    elif filename.endswith(".pdf"):
-        text_data = ""
-        try:
-            pdf_reader = PyPDF2.PdfReader(BytesIO(uploaded_file.file.read()))
-            for page in pdf_reader.pages:
-                text_data += page.extract_text() or ""
-            return text_data
-        except Exception:
-            raise HTTPException(status_code=400, detail="Unable to read PDF file")
-
-    else:
-        raise HTTPException(status_code=400, detail="Unsupported file format. Use PDF or DOCX.")
-
-
-# ------------------------
-# Main analysis endpoint
-# ------------------------
 @router.post("/analyze")
 async def analyze_legal_endpoint(
-    text_input: str = Form(None),
-    file: UploadFile = File(None),
+    file: UploadFile = File(...),
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user)  # ensures authentication
+    current_user = Depends(get_current_user),
 ):
-    """
-    Analyze either raw text or uploaded document for legal implications.
-    Only authenticated users can run this.
-    """
+   
 
-    # Validate input
-    if not text_input and not file:
-        raise HTTPException(status_code=400, detail="Please provide either text or a document.")
+    if not file:
+        raise HTTPException(status_code=400, detail="Please upload a PDF or DOCX file.")
 
-    # Extract text from file if provided
-    if file:
-        extracted_text = extract_text_from_file(file)
-        text_to_analyze = extracted_text.strip()
-    else:
-        text_to_analyze = text_input.strip()
+    # read bytes
+    file_bytes = await file.read()
+
+    # 1) Create fast document summary (very quick)
+    try:
+        document_summary = legal_agent.summarize_document_bytes(file_bytes, file.filename, max_sentences=3)
+    except Exception as e:
+        # summarization should be lightweight; if it fails, continue but warn in response
+        document_summary = ""
+        logger_msg = f"Document summarization failed: {e}"
+        # We don't raise here — we prefer to continue to analysis
+        # but include a short warning in the returned analysis message if needed.
+
+    # 2) Extract text for analysis
+    try:
+        text_to_analyze = legal_agent.extract_text_from_bytes(file_bytes, file.filename).strip()
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
 
     if not text_to_analyze:
-        raise HTTPException(status_code=400, detail="No valid text found for analysis.")
+        raise HTTPException(status_code=400, detail="Uploaded file contained no readable text.")
 
-    # Run ML legal analysis
+    # 3) Run full legal analysis (this may load the model if not already loaded)
     result = legal_agent.analyze_legal(text_to_analyze)
-    result_str = json.dumps(result)
 
+    # 4) Extract top issue + confidence (if any)
+    implications = result.get("legal_implications", []) or []
+    top = implications[0] if implications and isinstance(implications[0], dict) else None
+    top_issue = top.get("issue") if top else None
+    confidence_score = top.get("confidence_score") if top else None
 
-    # Use current authenticated user's ID
-    user_id = current_user.id
+    # 5) Save minimal info to DB. Support both compact and legacy create_legal_case signatures.
+    db_obj = None
+    try:
+        # Preferred compact signature (db, user_id, top_issue, confidence_score)
+        db_obj = crud_legal.create_legal_case(
+            db=db,
+            user_id=current_user.id,
+            top_issue=top_issue,
+            confidence_score=confidence_score
+        )
+    except TypeError:
+        # Fallback to older signature: store truncated input_text, legal_issues, relevant_laws, result_json
+        try:
+            db_obj = crud_legal.create_legal_case(
+                db=db,
+                user_id=current_user.id,
+                input_text=(text_to_analyze[:2000] + ("..." if len(text_to_analyze) > 2000 else "")),
+                legal_issues=json.dumps(implications if isinstance(implications, list) else []),
+                relevant_laws=json.dumps(result.get("relevant_laws", [])),
+                result_json=json.dumps(result)
+            )
+        except Exception as e:
+            # If DB write fails, surface a 500 with the error
+            raise HTTPException(status_code=500, detail=f"DB write failed: {e}")
+    except Exception as e:
+        # Any other error trying to save
+        raise HTTPException(status_code=500, detail=f"DB write failed: {e}")
 
-#         return {
-#             "message": "Legal case analyzed and saved successfully",
-#             "case_id": legal_case.id,
-#             
-#             "legal_issues": result.get("legal_issues"),
-#             "relevant_laws": result.get("relevant_laws"),
-#             "recommendations": result.get("recommendations")
-#         }
+    # 6) Prepare response
+    response: dict[str, Any] = {
+        "user_id": current_user.id,
+        "analysis_id": getattr(db_obj, "id", None),
+        "file_name": file.filename,
+        "document_summary": document_summary,
+        "analysis": result,   # full analysis returned to client (not stored)
+    }
 
-
-    # Save to DB
-    db_obj = crud_legal.create_legal_case(
-        db=db,
-        user_id=user_id,
-        input_text=text_to_analyze,
-        legal_issues=json.dumps(result.get("legal_implications", [])),
-        relevant_laws=json.dumps(result.get("relevant_laws", [])),
-        result_json=result_str
-    )
-
-    return JSONResponse({
-        "user_id": db_obj.user_id,
-        "input_text": db_obj.input_text[:300] + ("..." if len(db_obj.input_text) > 300 else ""),
-        "analysis": result
-    })
+    return JSONResponse(response)

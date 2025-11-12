@@ -13,7 +13,7 @@ from app.models.user import User
 
 router = APIRouter()
 
-@router.post("/insurance", response_model=List[FraudPredictionOut])
+@router.post("/json-claims", response_model=List[FraudPredictionOut])
 async def predict_fraud(
     claims: List[FraudPredictionIn],
     db: Session = Depends(get_db),
@@ -54,9 +54,7 @@ async def predict_fraud(
 
     return results
 
-
-
-@router.post("/upload", response_model=List[FraudPredictionOut])
+@router.post("/insurance-claims", response_model=List[FraudPredictionOut])
 async def upload_fraud_csv(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
@@ -124,7 +122,8 @@ async def upload_fraud_csv(
 
     return results
 
-@router.post("/predict-upload-only", response_model=List[FraudPredictionOut])
+
+@router.post("/public", response_model=List[FraudPredictionOut])
 async def predict_upload_only(
     file: UploadFile = File(...),
 ):
