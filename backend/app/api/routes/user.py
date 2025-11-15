@@ -37,7 +37,7 @@ async def get_dashboard(current_user: User = Depends(get_current_user), db: Sess
     medical_count = len(medical_cases)
     legal_count = len(legal_cases)
 
-    # --- Build Activities ---
+
     activities = []
 
     for fc in fraud_cases:
