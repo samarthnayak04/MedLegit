@@ -59,7 +59,7 @@ LEGAL_LABELS: List[str] = list(LEGAL_ISSUES.keys())
 _classifier = None
 _classifier_lock = threading.Lock()
 
-def get_classifier(model_name: str = "facebook/bart-large-mnli",
+def get_classifier(model_name: str = "typeform/distilbert-base-uncased-mnli",
                    prefer_framework: Optional[str] = None,
                    device: int = -1):
     """
