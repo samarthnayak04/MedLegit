@@ -18,7 +18,7 @@ import ActivityPage from "./pages/ActivityPage";
 import Home from "./pages/LandingPage";
 import About from "./pages/Aboutus";
 
-import Contact from "./pages/Contact";
+import Contact from "./pages/Contact.jsx";
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import DetectionService from "./pages/services/DetectionService";
