@@ -51,7 +51,7 @@ export default function ActivityPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-750 text-gray-100 p-0 m-0">
+    <div className="min-h-screen bg-gray-750 text-gray-100 p-0 m-0 pt-15">
       <h2 className="text-4xl font-bold text-cyan-400 mb-4">All Activities</h2>
 
       <div className="overflow-x-auto">

@@ -45,7 +45,7 @@ export default function Navbar({ fixed = false }) {
     >
       <motion.div
         className="flex justify-between items-center px-4 sm:px-6 py-3 rounded-b-2xl 
-          bg-slate-900/50 backdrop-blur-xl shadow-lg shadow-black/40 border-b border-blue-800/30 relative"
+          bg-slate-900/50 backdrop-blur-xl shadow-lg shadow-black/10 border-b border-blue-900/10 relative"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 120, damping: 20 }}

@@ -67,9 +67,6 @@ export default function AboutUs() {
               transition={{ duration: 0.8, ease: "easeOut" }}
               className="relative"
             >
-              {/* Glow Effect */}
-              <div className="absolute -inset-2 bg-gradient-to-r from-blue-600/20 to-cyan-400/10 blur-3xl rounded-xl"></div>
-
               {/* Text */}
               <div className="relative z-10 max-w-full md:max-w-xl px-2 sm:px-0">
                 <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold mb-4 sm:mb-6 bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent drop-shadow-lg leading-snug sm:leading-tight">
