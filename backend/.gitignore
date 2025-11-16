@@ -58,6 +58,7 @@ aiModels/**/*.pkl
 aiModels/**/*.joblib
 aiModels/**/*.json
 
+aiModels/disease_predictor/pneumonia_classifier1.tflite
 # ==========================
 # Alembic / Migrations
 # ==========================
