@@ -22,7 +22,7 @@ import Contact from "./pages/Contact";
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import DetectionService from "./pages/services/DetectionService";
-import Services from "./pages/Services/Services";
+import Services from "./pages/services/Services";
 import LegalService from "./pages/services/LegalService";
 import DiagnosticService from "./pages/services/DiagnosticService";
 
