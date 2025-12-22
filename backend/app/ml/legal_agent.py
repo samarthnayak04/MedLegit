@@ -59,44 +59,33 @@ LEGAL_LABELS: List[str] = list(LEGAL_ISSUES.keys())
 _classifier = None
 _classifier_lock = threading.Lock()
 
-def get_classifier(model_name: str = "typeform/distilbert-base-uncased-mnli",
-                   prefer_framework: Optional[str] = None,
-                   device: int = -1):
-    """
-    Returns a singleton transformers pipeline for zero-shot classification.
-    prefer_framework: "tf" or "pt" or None (auto-detect).
-    device: -1 for CPU, 0+ for GPU.
-    """
+def get_classifier(
+    model_name: str = "facebook/bart-large-mnli",
+    prefer_framework: Optional[str] = "tf",
+    device: int = -1
+):
     global _classifier
     if _classifier is None:
         with _classifier_lock:
             if _classifier is None:
-                framework = prefer_framework
-                # Try to auto-detect PyTorch (prefer pt if torch available)
-                if framework is None:
-                    try:
-                        import torch  # type: ignore
-                        framework = "pt"
-                    except Exception:
-                        framework = "tf"
-
-                if framework == "pt":
-                    # If running PT, ensure TF disabled if needed
-                    os.environ.setdefault("TRANSFORMERS_NO_TF", "1")
-
                 try:
                     _classifier = pipeline(
                         "zero-shot-classification",
                         model=model_name,
-                        framework=framework,
-                        device=device,
+                        framework="tf",   # FORCE TensorFlow
+                        device=device
                     )
-                    logger.info("Loaded classifier model=%s framework=%s device=%s", model_name, framework, device)
+                    logger.info(
+                        "Loaded classifier model=%s framework=tf device=%s",
+                        model_name,
+                        device
+                    )
                 except Exception as exc:
                     logger.exception("Failed to load transformer pipeline: %s", exc)
                     raise
 
     return _classifier
+
 
 # -----------------------------
 # File text extraction helper (NEW)
@@ -233,31 +222,20 @@ def build_extractive_summary(result: Dict[str, Any], max_issues: int = 2) -> str
 # -----------------------------
 # Core Analysis Function (unchanged behaviour, attaches analysis summary)
 # -----------------------------
-def analyze_legal(text: str, confidence_threshold: float = 0.6) -> Dict[str, Any]:
-    """
-    Perform zero-shot classification to detect legal issues and produce recommendations.
-    Attaches a fast extractive summary of the analysis in result['summary'].
-    """
+def analyze_legal(text: str, confidence_threshold: float = 0.5) -> Dict[str, Any]:
     if not text or not text.strip():
         return {
             "legal_implications": [],
             "recommendations": [],
             "message": "No valid text provided for analysis.",
+            "summary": ""
         }
 
-    try:
-        # Keep prefer_framework None to auto-detect (or pass 'pt' if you have torch)
-        classifier = get_classifier(prefer_framework=None)
-    except Exception as e:
-        return {
-            "legal_implications": [],
-            "recommendations": [],
-            "message": f"Model load failed: {str(e)}",
-        }
+    classifier = get_classifier()
 
     try:
         classification = classifier(
-            text,
+            text[:1000],  # HARD LIMIT for TensorFlow + BART
             candidate_labels=LEGAL_LABELS,
             multi_label=True
         )
@@ -267,33 +245,33 @@ def analyze_legal(text: str, confidence_threshold: float = 0.6) -> Dict[str, Any
             "legal_implications": [],
             "recommendations": [],
             "message": f"Error during model inference: {str(e)}",
+            "summary": ""
         }
 
     legal_implications = []
-    for label, score in zip(classification.get("labels", []), classification.get("scores", [])):
+
+    for label, score in zip(classification["labels"], classification["scores"]):
         if score >= confidence_threshold:
             legal_implications.append({
                 "issue": label,
-                "confidence_score": round(float(score), 2),
+                "confidence_score": float(score),  # RAW SCORE
                 "relevant_law": LEGAL_ISSUES[label]["law"],
                 "statute_quote": LEGAL_ISSUES[label]["statute_quote"]
             })
 
-    if not legal_implications:
-        result = {
-            "legal_implications": [],
-            "recommendations": [],
-            "message": "No legal implications.",
-        }
-        result["summary"] = build_extractive_summary(result)
-        return result
+    # SORT BY CONFIDENCE (MANDATORY)
+    legal_implications.sort(
+        key=lambda x: x["confidence_score"],
+        reverse=True
+    )
 
     recommendations = []
     for item in legal_implications:
         issue = item["issue"]
+
         if issue == "lack of informed consent":
             recommendations.append("Ensure all consent forms are properly signed and stored.")
-        elif issue == "delayed treatment":
+        elif issue == "delayed,improper treatment":
             recommendations.append("Improve triage and emergency response protocols.")
         elif issue == "documentation lapse":
             recommendations.append("Maintain detailed and accurate medical documentation.")
@@ -302,9 +280,11 @@ def analyze_legal(text: str, confidence_threshold: float = 0.6) -> Dict[str, Any
 
     result = {
         "legal_implications": legal_implications,
-        "recommendations": sorted(list(set(recommendations))),
+        "recommendations": list(set(recommendations)),
         "message": "Analysis completed successfully."
     }
-    # attach a fast extractive summary of the analysis (not the document)
-    
+
+    # ATTACH SUMMARY (YOU WERE MISSING THIS)
+    result["summary"] = build_extractive_summary(result)
+
     return result
