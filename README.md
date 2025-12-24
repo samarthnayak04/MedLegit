@@ -145,11 +145,10 @@ VITE_API_URL=http://localhost:8000/api
 
 ```
 
-###🚀 Quick Start
-│
-├── 🐳 Docker Development (Recommended)
-│
-└── 🧪 Local Development (Manual Setup)
+### 🚀 Quick Start
+
+🐳 Docker Development (Recommended)
+🧪 Local Development (Manual Setup)
 
 Clone the repository:
 
@@ -173,9 +172,11 @@ docker compose up --build
 
 ### Access the application:
 
+```bash
 Frontend: http://localhost:3000
 
 Backend API Docs: http://localhost:8000/docs
+```
 
 ### 🧪Local Development
 
