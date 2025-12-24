@@ -31,8 +31,6 @@ It combines Machine Learning, Deep Learning, and Natural Language Processing (NL
 - [Future Enhancements](#future-enhancements)
 - [References](#references)
 
----
-
 ## 📘 Introduction
 
 Healthcare systems deal with complex challenges such as:
@@ -54,8 +52,6 @@ MedLegit addresses these challenges by integrating:
 - A unified backend and dashboard for decision support
 
 The system improves **accuracy, efficiency, transparency, and regulatory compliance**.
-
----
 
 ## ⭐ Key Features
 
@@ -90,8 +86,6 @@ The system improves **accuracy, efficiency, transparency, and regulatory complia
 
 - Includes activity logs, file uploads, and visual analytics for decision support.
 
----
-
 ## 🧩 Modules
 
 ### 1. Fraud Detection Module
@@ -113,8 +107,6 @@ The system improves **accuracy, efficiency, transparency, and regulatory complia
 - Identifies legal issues and maps them to IMC and IPC regulations.
 - Produces a legal issue list, relevant laws, statute quotes, recommendations, and an extractive summary.
 
----
-
 ## 🛠 Tech Stack
 
 | Category      | Technologies Used                                                                                 |
@@ -124,17 +116,68 @@ The system improves **accuracy, efficiency, transparency, and regulatory complia
 | **ML/DL/NLP** | XGBoost, **TensorFlow / Keras**, Scikit-learn, HuggingFace Transformers, Imbalanced-Learn (SMOTE) |
 | **Database**  | **PostgreSQL**, PgAdmin                                                                           |
 
----
+### 🔐Environment Variables
 
-## Installation
+### Backend .env
+
+```
+DATABASE_URL=postgresql://username:password@localhost/medlegit
+
+TF_CPP_MIN_LOG_LEVEL=3
+TF_ENABLE_ONEDNN_OPTS=0
+PYTHONWARNINGS=ignore
+SECRET_KEY="custom_secret_key"
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+BCRYPT_ROUNDS=12
+API_V1_STR=/api
+PROJECT_NAME=MedLegit API
+# For Docker Development
+FRONTEND_URL=http://localhost:3000
+# For Local Development
+FRONTEND_URL=http://localhost:5173
+```
+
+### Frontend .env
+
+```
+VITE_API_URL=http://localhost:8000/api
+
+```
+
+###🚀 Quick Start
+│
+├── 🐳 Docker Development (Recommended)
+│
+└── 🧪 Local Development (Manual Setup)
 
 Clone the repository:
 
 ```bash
-git clone [https://github.com/samarthnayak04/medlegit.git](https://github.com/samarthnayak04/medlegit.git)
+git clone https://github.com/samarthnayak04/MedLegit.git
 cd medlegit
 
 ```
+
+### 🐳 Docker Development
+
+This is the recommended way to run MedLegit.  
+Both frontend and backend are started together using Docker Compose.
+
+### Start the application
+
+```bash
+docker compose up --build
+
+```
+
+### Access the application:
+
+Frontend: http://localhost:3000
+
+Backend API Docs: http://localhost:8000/docs
+
+### 🧪Local Development
 
 ## 🧩 Backend Setup
 
@@ -150,37 +193,9 @@ uvicorn app.main:app --reload --port 8000
 ## 🎨 Frontend Setup
 
 ```
-Copy code
 cd frontend
 npm install
 npm run dev
-```
-
-### 🔐 Environment Variables
-
-### Backend .env
-
-```
-DATABASE_URL=postgresql://username:password@localhost/medlegit
-
-TF_CPP_MIN_LOG_LEVEL=3
-TF_ENABLE_ONEDNN_OPTS=0
-PYTHONWARNINGS=ignore
-SECRET_KEY=legitMed
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-BCRYPT_ROUNDS=12
-API_V1_STR=/api
-PROJECT_NAME=MedLegit API
-TF_ENABLE_ONEDNN_OPTS=0
-FRONTEND_URL=http://localhost:5173
-```
-
-### Frontend .env
-
-```
-VITE_API_URL=https://your-backend-url/api
-Running the Application
 ```
 
 ## 📡 API Endpoints
@@ -214,8 +229,6 @@ The API is built using **FastAPI** for high performance and includes the followi
 | :----- | :------------------- | :----------------------------------------------------------------- |
 | `POST` | `/api/legal/analyze` | Analyze clinical notes or documentation for potential legal risks. |
 
----
-
 ## 📊 Model Details
 
 The platform utilizes three core machine learning models, demonstrating strong performance across all tasks:
@@ -246,16 +259,12 @@ The platform utilizes three core machine learning models, demonstrating strong p
 | Informed Consent    | **0.70–0.95**    |
 | Documentation Lapse | **0.65–0.88**    |
 
----
-
 ## 🌄 Performance & Results
 
 - All three models achieved **high accuracy** and strong generalization.
 - **FastAPI inference time < 0.3 sec** (for all endpoints).
 - **Stable performance** observed during load testing.
 - Model outputs are **clear and interpretable**.
-
----
 
 ## 🚀 Future Enhancements
 
@@ -270,8 +279,6 @@ We plan to implement the following features and architectural improvements:
   - Real-time fraud monitoring capabilities.
   - Integration with hospital systems using standards like **HL7 / FHIR**.
 
----
-
 ## Development Workflow
 
 We follow a structured Git workflow to ensure code quality and stability:
@@ -283,8 +290,6 @@ We follow a structured Git workflow to ensure code quality and stability:
   - Add **unit tests** for all new backend endpoints.
   - Add **integration tests** specifically covering ML inference paths.
 
----
-
 ## Contributing
 
 Contributions are welcome! Please feel free to open an issue or a Pull Request.
@@ -295,8 +300,6 @@ Contributions are welcome! Please feel free to open an issue or a Pull Request.
 2.  **Create a feature branch** (`git checkout -b feat/your-feature-name`).
 3.  **Add tests** if applicable to cover your new functionality.
 4.  **Open a PR** with a clear and concise description of the changes.
-
----
 
 ## License
 
