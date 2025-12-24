@@ -23,8 +23,8 @@ It combines Machine Learning, Deep Learning, and Natural Language Processing (NL
   - [2. Pneumonia Detection Module](#2-pneumonia-detection-module)
   - [3. Legal Intelligence Module](#3-legal-intelligence-module)
 - [Tech Stack](#tech-stack)
-- [Installation](#installation)
-- [Running the Application](#running-the-application)
+- [Environment Variables](#environment-variables)
+- [Quick Start](#Quick-Start)
 - [API Endpoints](#api-endpoints)
 - [Model Details](#model-details)
 - [Results](#results)
@@ -147,9 +147,6 @@ VITE_API_URL=http://localhost:8000/api
 
 ### 🚀 Quick Start
 
-🐳 Docker Development (Recommended)
-🧪 Local Development (Manual Setup)
-
 Clone the repository:
 
 ```bash
@@ -158,12 +155,12 @@ cd medlegit
 
 ```
 
-### 🐳 Docker Development
+## 🐳 Docker Development (Recommended)
 
 This is the recommended way to run MedLegit.  
 Both frontend and backend are started together using Docker Compose.
 
-### Start the application
+## Start the application
 
 ```bash
 docker compose up --build
@@ -172,15 +169,13 @@ docker compose up --build
 
 ### Access the application:
 
-```bash
-Frontend: http://localhost:3000
+#### Frontend: http://localhost:3000
 
-Backend API Docs: http://localhost:8000/docs
-```
+#### Backend API Docs: http://localhost:8000/docs
 
-### 🧪Local Development
+## 🧪Local Development (Manual Method)
 
-## 🧩 Backend Setup
+### 🧩 Backend Setup
 
 ```bash
 cd backend
@@ -191,7 +186,7 @@ alembic upgrade head
 uvicorn app.main:app --reload --port 8000
 ```
 
-## 🎨 Frontend Setup
+### 🎨 Frontend Setup
 
 ```
 cd frontend
